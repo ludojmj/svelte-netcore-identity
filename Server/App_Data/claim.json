@@ -1,0 +1,65 @@
+[
+    {
+        "issuer": "LOCAL AUTHORITY",
+        "originalIssuer": "LOCAL AUTHORITY",
+        "properties": {},
+        "subject": null,
+        "type": "name",
+        "value": "Bob Smith",
+        "valueType": "http://www.w3.org/2001/XMLSchema#string"
+    },
+    {
+        "issuer": "LOCAL AUTHORITY",
+        "originalIssuer": "LOCAL AUTHORITY",
+        "properties": {},
+        "subject": null,
+        "type": "given_name",
+        "value": "Bob",
+        "valueType": "http://www.w3.org/2001/XMLSchema#string"
+    },
+    {
+        "issuer": "LOCAL AUTHORITY",
+        "originalIssuer": "LOCAL AUTHORITY",
+        "properties": {},
+        "subject": null,
+        "type": "family_name",
+        "value": "Smith",
+        "valueType": "http://www.w3.org/2001/XMLSchema#string"
+    },
+    {
+        "issuer": "LOCAL AUTHORITY",
+        "originalIssuer": "LOCAL AUTHORITY",
+        "properties": {},
+        "subject": null,
+        "type": "email",
+        "value": "BobSmith@email.com",
+        "valueType": "http://www.w3.org/2001/XMLSchema#string"
+    },
+    {
+        "issuer": "LOCAL AUTHORITY",
+        "originalIssuer": "LOCAL AUTHORITY",
+        "properties": {},
+        "subject": null,
+        "type": "email_verified",
+        "value": "true",
+        "valueType": "http://www.w3.org/2001/XMLSchema#string"
+    },
+    {
+        "issuer": "LOCAL AUTHORITY",
+        "originalIssuer": "LOCAL AUTHORITY",
+        "properties": {},
+        "subject": null,
+        "type": "website",
+        "value": "http://bob.com",
+        "valueType": "http://www.w3.org/2001/XMLSchema#string"
+    },
+    {
+        "issuer": "LOCAL AUTHORITY",
+        "originalIssuer": "LOCAL AUTHORITY",
+        "properties": {},
+        "subject": null,
+        "type": "sub",
+        "value": "11",
+        "valueType": "http://www.w3.org/2001/XMLSchema#string"
+    }
+]
