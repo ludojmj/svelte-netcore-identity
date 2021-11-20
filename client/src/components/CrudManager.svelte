@@ -42,18 +42,6 @@
   const handleCreate = () => {
     navigate("create");
   };
-
-  const handleRead = (id) => {
-    navigate("read/" + id);
-  };
-
-  const handleUpdate = (id) => {
-    navigate("update/" + id);
-  };
-
-  const handleDelete = (id) => {
-    navigate("delete/" + id);
-  };
 </script>
 
 <main>
@@ -127,6 +115,6 @@
         </tbody>
       </table>
     </form>
-    <StuffList {stuff} {handleRead} {handleUpdate} {handleDelete} />
+    <StuffList {stuff} />
   {/if}
 </main>

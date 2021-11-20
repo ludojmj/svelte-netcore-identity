@@ -1,4 +1,5 @@
 <script>
+  // Header.svelte
   let logo = "/logo.svg";
   import {
     LoginButton,

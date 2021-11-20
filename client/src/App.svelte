@@ -16,19 +16,16 @@
   import StuffRead from "./components/StuffRead.svelte";
   import StuffUpdate from "./components/StuffUpdate.svelte";
   import StuffDelete from "./components/StuffDelete.svelte";
-  const oidcConf = isProd
-    ? {
-        issuer: "https://demo.identityserver.io",
-        client_id: "interactive.public",
-        redirect_uri: "https://localhost:5001",
-        post_logout_redirect_uri: "https://localhost:5001/",
-      }
-    : {
-        issuer: "https://demo.identityserver.io",
-        client_id: "interactive.public",
-        redirect_uri: "http://localhost:3000",
-        post_logout_redirect_uri: "http://localhost:3000/",
-      };
+  let oidcConf = {
+    issuer: "https://demo.identityserver.io",
+    client_id: "interactive.public",
+    redirect_uri: "http://localhost:3000",
+    post_logout_redirect_uri: "http://localhost:3000/",
+  };
+  if (isProd) {
+    oidcConf.redirect_uri = "https://localhost:5001";
+    oidcConf.post_logout_redirect_uri = "https://localhost:5001/";
+  }
   const displayOidcConf = false;
 </script>
 
@@ -42,7 +39,7 @@
     >
       <Header />
       {#if $authError}
-        <div class="alert alert-danger" role="alert">
+        <div class="alert alert-warning" role="alert">
           You need to login to access this site.
         </div>
       {/if}
@@ -61,7 +58,9 @@
           <Route path="delete/:id" let:params>
             <StuffDelete id={params.id} />
           </Route>
-          <Route path="/"><CrudManager /></Route>
+          <Route path="/">
+            <CrudManager />
+          </Route>
         </Router>
       {/if}
 
