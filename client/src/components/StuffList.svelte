@@ -2,19 +2,21 @@
   // StuffList.svelte
   import { useNavigate } from "svelte-navigator";
   import { userInfo } from "../oidc/components.module"; // "@dopry/svelte-oidc";
+  import { selectedItem } from "../store.js";
   export let stuff;
 
   const navigate = useNavigate();
-  const handleRead = (event) => {
-    navigate("read/" + event.currentTarget.value);
+  const handleRead = (stuffDatum) => {
+    selectedItem.update(() => stuffDatum);
+    navigate("/read/" + stuffDatum.id);
   };
 
   const handleUpdate = (event) => {
-    navigate("update/" + event.currentTarget.value);
+    navigate("/update/" + event.currentTarget.value);
   };
 
   const handleDelete = (event) => {
-    navigate("delete/" + event.currentTarget.value);
+    navigate("/delete/" + event.currentTarget.value);
   };
 </script>
 
@@ -63,8 +65,7 @@
           <td>
             <button
               class="btn btn-secondary"
-              value={stuffDatum.id}
-              on:click={handleRead}
+              on:click={() => handleRead(stuffDatum)}
             >
               Read
             </button>

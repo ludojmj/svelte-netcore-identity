@@ -1,17 +1,12 @@
 <script>
   // StuffRead.svelte
-  import { onMount } from "svelte";
   import { useNavigate } from "svelte-navigator";
-  import { apiGetStuffById } from "../api/stuff";
-  import { accessToken, idToken } from "../oidc/components.module"; // "@dopry/svelte-oidc";
+  import { selectedItem } from "../store.js";
   import CommonForm from "./CommonForm.svelte";
+  import Error from "./Error.svelte";
   export let id;
 
-  let stuffDatum = {};
-  onMount(async () => {
-    stuffDatum = await apiGetStuffById(id, $accessToken, $idToken);
-  });
-
+  $: stuffDatum = $selectedItem || {};
   const navigate = useNavigate();
   const handleCancel = () => {
     navigate("/");
@@ -19,13 +14,17 @@
 </script>
 
 <main>
-  <CommonForm
-    title="Reading a stuff"
-    {stuffDatum}
-    inputError={null}
-    disabled="disabled"
-    handleChange={null}
-    {handleCancel}
-    handleSubmit={handleCancel}
-  />
+  {#if id !== $selectedItem.id}
+    <Error msgErr="This is not what you want to read." />
+  {:else}
+    <CommonForm
+      title="Reading a stuff"
+      {stuffDatum}
+      inputError={null}
+      readonly={true}
+      handleChange={null}
+      {handleCancel}
+      handleSubmit={handleCancel}
+    />
+  {/if}
 </main>

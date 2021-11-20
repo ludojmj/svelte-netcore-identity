@@ -39,6 +39,10 @@
 
     if (!/\S/.test(stuffDatum.label)) {
       inputError = "The label cannot be empty.";
+      setTimeout(() => {
+        inputError = "";
+      }, 2000);
+
       return;
     }
 
@@ -54,7 +58,7 @@
     title="Creating a stuff"
     stuffDatum={initialDatum}
     {inputError}
-    disabled={null}
+    readonly={false}
     {handleChange}
     {handleCancel}
     {handleSubmit}
