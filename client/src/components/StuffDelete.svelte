@@ -5,8 +5,8 @@
   import { apiGetStuffById, apiDeleteStuff } from "../api/stuff";
   import { accessToken, idToken } from "../oidc/components.module"; // "@dopry/svelte-oidc";
   import CommonForm from "./CommonForm.svelte";
-
   export let id;
+
   let stuffDatum = {};
   onMount(async () => {
     stuffDatum = await apiGetStuffById(id, $accessToken, $idToken);

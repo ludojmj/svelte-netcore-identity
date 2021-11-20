@@ -1,9 +1,21 @@
 <script>
+  // StuffList.svelte
+  import { useNavigate } from "svelte-navigator";
   import { userInfo } from "../oidc/components.module"; // "@dopry/svelte-oidc";
   export let stuff;
-  export let handleRead;
-  export let handleUpdate;
-  export let handleDelete;
+
+  const navigate = useNavigate();
+  const handleRead = (event) => {
+    navigate("read/" + event.currentTarget.value);
+  };
+
+  const handleUpdate = (event) => {
+    navigate("update/" + event.currentTarget.value);
+  };
+
+  const handleDelete = (event) => {
+    navigate("delete/" + event.currentTarget.value);
+  };
 </script>
 
 <main>
@@ -52,7 +64,7 @@
             <button
               class="btn btn-secondary"
               value={stuffDatum.id}
-              on:click={handleRead(stuffDatum.id)}
+              on:click={handleRead}
             >
               Read
             </button>
@@ -62,13 +74,14 @@
               <button
                 class="btn btn-warning"
                 value={stuffDatum.id}
-                on:click={() => handleUpdate(stuffDatum.id)}>Update</button
+                on:click={handleUpdate}>Update</button
               >
             </td>
             <td>
               <button
                 class="btn btn-danger"
-                on:click={() => handleDelete(stuffDatum.id)}>Delete</button
+                value={stuffDatum.id}
+                on:click={handleDelete}>Delete</button
               >
             </td>
           {:else}
