@@ -40,7 +40,7 @@
 
   const navigate = useNavigate();
   const handleCreate = () => {
-    navigate("create");
+    navigate("/create");
   };
 </script>
 
@@ -81,7 +81,7 @@
                     class="btn btn-primary"
                     value="-"
                     on:click={handlePage}
-                    disabled={stuff.page === 1 && "disabled"}
+                    disabled={stuff.page === 1}
                   >
                     &laquo;
                   </button>
@@ -96,7 +96,7 @@
                     class="btn btn-primary"
                     value="+"
                     on:click={handlePage}
-                    disabled={stuff.page === stuff.totalPages && "disabled"}
+                    disabled={stuff.page === stuff.totalPages}
                   >
                     &raquo;
                   </button>

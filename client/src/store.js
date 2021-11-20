@@ -1,3 +1,4 @@
+// store.js
 import { writable, derived } from "svelte/store";
 
 export const isAuthenticated = writable(false);
@@ -16,3 +17,7 @@ export const user_tasks = derived([tasks, user], ([$tasks, $user]) => {
 
   return logged_in_user_tasks;
 });
+
+// export const selectedItem = writable({});
+export const selectedItem = writable(JSON.parse(localStorage.getItem("selectedItem")) || {});
+selectedItem.subscribe(val => localStorage.setItem("selectedItem", JSON.stringify(val)));

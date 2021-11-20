@@ -5,7 +5,7 @@
   export let title,
     stuffDatum,
     inputError,
-    disabled,
+    readonly,
     handleChange,
     handleCancel,
     handleSubmit;
@@ -68,8 +68,8 @@
         id="user"
         value={stuffDatum.user ? stuffDatum.user.givenName : "Current user"}
         aria-label="User"
-        disabled
-        readonly
+        disabled={true}
+        {readonly}
       />
 
       <label class="form-label" for="label">Label:</label>
@@ -79,10 +79,10 @@
         maxLength="79"
         name="label"
         id="label"
-        placeholder="Label"
+        placeholder={readonly ? "" : "Label"}
         value={stuffDatum.label}
         on:change={handleChange}
-        {disabled}
+        {readonly}
       />
 
       <label class="form-label" for="description">Description:</label>
@@ -92,10 +92,10 @@
         maxLength="79"
         name="description"
         id="description"
-        placeholder="Description"
+        placeholder={readonly ? "" : "Description"}
         value={stuffDatum.description}
         on:change={handleChange}
-        {disabled}
+        {readonly}
       />
 
       <label class="form-label" for="otherInfo">Other info:</label>
@@ -105,10 +105,10 @@
         maxLength="399"
         name="otherInfo"
         id="otherInfo"
-        placeholder="Other info"
+        placeholder={readonly ? "" : "Other info"}
         value={stuffDatum.otherInfo}
         on:change={handleChange}
-        {disabled}
+        {readonly}
       />
 
       <footer>

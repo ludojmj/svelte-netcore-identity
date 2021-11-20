@@ -16,6 +16,8 @@
   import StuffRead from "./components/StuffRead.svelte";
   import StuffUpdate from "./components/StuffUpdate.svelte";
   import StuffDelete from "./components/StuffDelete.svelte";
+  import Error from "./components/Error.svelte";
+
   let oidcConf = {
     issuer: "https://demo.identityserver.io",
     client_id: "interactive.public",
@@ -48,18 +50,20 @@
           <Route path="create">
             <StuffCreate />
           </Route>
-          <!-- <Route path="read/:id" component={StuffRead} /> -->
-          <Route path="read/:id" let:params>
+          <Route path="/read/:id" let:params>
             <StuffRead id={params.id} />
           </Route>
-          <Route path="update/:id" let:params>
+          <Route path="/update/:id" let:params>
             <StuffUpdate id={params.id} />
           </Route>
-          <Route path="delete/:id" let:params>
+          <Route path="/delete/:id" let:params>
             <StuffDelete id={params.id} />
           </Route>
           <Route path="/">
             <CrudManager />
+          </Route>
+          <Route>
+            <Error msgErr="I got lost." />
           </Route>
         </Router>
       {/if}

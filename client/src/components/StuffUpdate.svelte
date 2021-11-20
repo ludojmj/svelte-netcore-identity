@@ -67,7 +67,7 @@
     title="Updating a stuff"
     stuffDatum={initialDatum}
     {inputError}
-    disabled={null}
+    readonly={false}
     {handleChange}
     {handleCancel}
     {handleSubmit}
