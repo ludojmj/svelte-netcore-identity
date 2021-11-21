@@ -3,22 +3,24 @@ import axios from "axios";
 
 const rootApi = isProd ? "https://localhost:5001/api/stuff" : "http://localhost:3000/mock/stuff";
 const isMock = rootApi.indexOf("mock") > -1;
+const axiosCall = async (params) => {
+  try {
+    const result = await axios(params);
+    return result.data;
+  } catch (error) {
+    const errResult = { error: getErrorMsg(error) };
+    return errResult;
+  }
+};
 
 export const apiGetStuffList = async (accessToken, idToken) => {
   const mock = isMock ? ".json" : "";
   const getMsg = {
     method: "get",
     headers: { "authorization": `Bearer ${accessToken}`, "id_token": idToken },
-    url: rootApi + mock,
-    data: {}
+    url: rootApi + mock
   };
-
-  try {
-    const result = await axios(getMsg);
-    return result.data;
-  } catch (error) {
-    return { error: getErrorMsg(error) };
-  }
+  return await axiosCall(getMsg);
 };
 
 export const apiSearchStuff = async (search, accessToken, idToken) => {
@@ -26,16 +28,9 @@ export const apiSearchStuff = async (search, accessToken, idToken) => {
   const getMsg = {
     method: "get",
     headers: { "authorization": `Bearer ${accessToken}`, "id_token": idToken },
-    url: `${rootApi}${mock}?search=${search}`,
-    data: {}
+    url: `${rootApi}${mock}?search=${search}`
   };
-
-  try {
-    const result = await axios(getMsg);
-    return result.data;
-  } catch (error) {
-    return { error: getErrorMsg(error) };
-  }
+  return await axiosCall(getMsg);
 };
 
 export const apiGotoPage = async (page, accessToken, idToken) => {
@@ -43,16 +38,9 @@ export const apiGotoPage = async (page, accessToken, idToken) => {
   const getMsg = {
     method: "get",
     headers: { "authorization": `Bearer ${accessToken}`, "id_token": idToken },
-    url: `${rootApi}${mock}?page=${page}`,
-    data: {}
+    url: `${rootApi}${mock}?page=${page}`
   };
-
-  try {
-    const result = await axios(getMsg);
-    return result.data;
-  } catch (error) {
-    return { error: getErrorMsg(error) };
-  }
+  return await axiosCall(getMsg);
 };
 
 export const apiGetStuffById = async (id, accessToken, idToken) => {
@@ -60,16 +48,9 @@ export const apiGetStuffById = async (id, accessToken, idToken) => {
   const getMsg = {
     method: "get",
     headers: { "authorization": `Bearer ${accessToken}`, "id_token": idToken },
-    url: `${rootApi}/${id}${mock}`,
-    data: {}
+    url: `${rootApi}/${id}${mock}`
   };
-
-  try {
-    const result = await axios(getMsg);
-    return result.data;
-  } catch (error) {
-    return { error: getErrorMsg(error) };
-  }
+  return await axiosCall(getMsg);
 };
 
 export const apiCreateStuff = async (input, accessToken, idToken) => {
@@ -80,13 +61,7 @@ export const apiCreateStuff = async (input, accessToken, idToken) => {
     url: rootApi + mock,
     data: input
   };
-
-  try {
-    const result = await axios(postMsg);
-    return result.data;
-  } catch (error) {
-    return { error: getErrorMsg(error) };
-  }
+  return await axiosCall(postMsg);
 };
 
 export const apiUpdateStuff = async (id, input, accessToken, idToken) => {
@@ -97,13 +72,7 @@ export const apiUpdateStuff = async (id, input, accessToken, idToken) => {
     url: `${rootApi}/${id}${mock}`,
     data: input
   };
-
-  try {
-    const result = await axios(putMsg);
-    return result.data;
-  } catch (error) {
-    return { error: getErrorMsg(error) };
-  }
+  return await axiosCall(putMsg);
 };
 
 export const apiDeleteStuff = async (id, accessToken, idToken) => {
@@ -111,16 +80,9 @@ export const apiDeleteStuff = async (id, accessToken, idToken) => {
   const deleteMsg = {
     method: isMock ? "get" : "delete",
     headers: { "authorization": `Bearer ${accessToken}`, "id_token": idToken },
-    url: `${rootApi}/${id}${mock}`,
-    data: {}
+    url: `${rootApi}/${id}${mock}`
   };
-
-  try {
-    const result = await axios(deleteMsg);
-    return result.data;
-  } catch (error) {
-    return { error: getErrorMsg(error) };
-  }
+  return await axiosCall(deleteMsg);
 };
 
 const getErrorMsg = error => {

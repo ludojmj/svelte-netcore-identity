@@ -35,11 +35,11 @@ namespace Server.Shared
 
             if (exception is NotFoundException)
             {
-                return new NotFoundObjectResult(new ErrorModel { Error = msg });
+                return NotFound(new ErrorModel { Error = msg });
             }
 
             var error = new ErrorModel { Error = _env.IsDevelopment() ? msg : "An error occured. Please try again later." };
-            return new BadRequestObjectResult(error);
+            return BadRequest(error);
         }
     }
 }

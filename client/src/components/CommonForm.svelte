@@ -24,12 +24,12 @@
 </script>
 
 <main>
-  {#if !stuffDatum.id}
-    {#if stuffDatum.error}
-      <Error msgErr={stuffDatum.error} />
-    {:else}
-      <Loading />
-    {/if}
+  {#if !stuffDatum.error && !stuffDatum.id}
+    <Loading />
+  {/if}
+
+  {#if stuffDatum.error}
+    <Error msgErr={stuffDatum.error} />
   {/if}
 
   {#if inputError}
