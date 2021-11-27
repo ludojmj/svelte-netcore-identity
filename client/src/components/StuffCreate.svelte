@@ -15,7 +15,7 @@
   };
   let stuffDatum = {};
 
-  onMount(async () => {
+  onMount(() => {
     stuffDatum = initialDatum;
   });
 

@@ -4,7 +4,7 @@
   export let msgErr;
 
   const navigate = useNavigate();
-  const handleReset = async () => {
+  const handleReset = () => {
     navigate("/");
   };
 </script>
