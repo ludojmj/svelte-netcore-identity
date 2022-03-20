@@ -166,6 +166,7 @@ namespace Server
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseSecurity();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers().RequireAuthorization();

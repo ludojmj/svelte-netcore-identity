@@ -8,8 +8,7 @@ const axiosCall = async (params) => {
     const result = await axios(params);
     return result.data;
   } catch (error) {
-    const errResult = { error: getErrorMsg(error) };
-    return errResult;
+    return { error: getErrorMsg(error) };
   }
 };
 
@@ -20,7 +19,7 @@ export const apiGetStuffList = async (accessToken, idToken) => {
     headers: { "authorization": `Bearer ${accessToken}`, "id_token": idToken },
     url: rootApi + mock
   };
-  return await axiosCall(getMsg);
+  return axiosCall(getMsg);
 };
 
 export const apiSearchStuff = async (search, accessToken, idToken) => {
@@ -30,7 +29,7 @@ export const apiSearchStuff = async (search, accessToken, idToken) => {
     headers: { "authorization": `Bearer ${accessToken}`, "id_token": idToken },
     url: `${rootApi}${mock}?search=${search}`
   };
-  return await axiosCall(getMsg);
+  return axiosCall(getMsg);
 };
 
 export const apiGotoPage = async (page, accessToken, idToken) => {
@@ -40,7 +39,7 @@ export const apiGotoPage = async (page, accessToken, idToken) => {
     headers: { "authorization": `Bearer ${accessToken}`, "id_token": idToken },
     url: `${rootApi}${mock}?page=${page}`
   };
-  return await axiosCall(getMsg);
+  return axiosCall(getMsg);
 };
 
 export const apiGetStuffById = async (id, accessToken, idToken) => {
@@ -50,7 +49,7 @@ export const apiGetStuffById = async (id, accessToken, idToken) => {
     headers: { "authorization": `Bearer ${accessToken}`, "id_token": idToken },
     url: `${rootApi}/${id}${mock}`
   };
-  return await axiosCall(getMsg);
+  return axiosCall(getMsg);
 };
 
 export const apiCreateStuff = async (input, accessToken, idToken) => {
@@ -61,7 +60,7 @@ export const apiCreateStuff = async (input, accessToken, idToken) => {
     url: rootApi + mock,
     data: input
   };
-  return await axiosCall(postMsg);
+  return axiosCall(postMsg);
 };
 
 export const apiUpdateStuff = async (id, input, accessToken, idToken) => {
@@ -72,7 +71,7 @@ export const apiUpdateStuff = async (id, input, accessToken, idToken) => {
     url: `${rootApi}/${id}${mock}`,
     data: input
   };
-  return await axiosCall(putMsg);
+  return axiosCall(putMsg);
 };
 
 export const apiDeleteStuff = async (id, accessToken, idToken) => {
@@ -82,7 +81,7 @@ export const apiDeleteStuff = async (id, accessToken, idToken) => {
     headers: { "authorization": `Bearer ${accessToken}`, "id_token": idToken },
     url: `${rootApi}/${id}${mock}`
   };
-  return await axiosCall(deleteMsg);
+  return axiosCall(deleteMsg);
 };
 
 const getErrorMsg = error => {
