@@ -47,7 +47,9 @@
     }
 
     stuffDatum = await apiCreateStuff(stuffDatum, $accessToken, $idToken);
-    if (!stuffDatum.error) {
+    if (stuffDatum.error) {
+      inputError = stuffDatum.error;
+    } else {
       navigate("/");
     }
   };

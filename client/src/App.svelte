@@ -47,7 +47,7 @@
       {/if}
       {#if $isAuthenticated}
         <Router primary={false}>
-          <Route path="create">
+          <Route path="/create">
             <StuffCreate />
           </Route>
           <Route path="/read/:id" let:params>
