@@ -1,0 +1,11 @@
+{
+  "short_name": "svelte-netcore-identity",
+  "name": "svelte-netcore-identity",
+  "icons": [
+  ],
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#fff",
+  "theme_color": "#fff",
+  "description": "Svelte, net6.0 and oAuth"
+}
