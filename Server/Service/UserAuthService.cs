@@ -12,11 +12,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using IdentityModel.Client;
 using Server.DbModels;
-using Server.Repository.Interfaces;
+using Server.Service.Interfaces;
 
-namespace Server.Repository
+namespace Server.Service
 {
-    public class UserAuthRepo : IUserAuthRepo
+    public class UserAuthService : IUserAuthService
     {
         private const string CstCachePrefix = "AUTH_";
         private readonly IConfiguration _conf;
@@ -24,7 +24,7 @@ namespace Server.Repository
         private readonly IHttpContextAccessor _httpContext;
         private readonly ILogger _logger;
 
-        public UserAuthRepo(IMemoryCache cache, IConfiguration conf, IHttpContextAccessor httpContext, ILogger<UserAuthRepo> logger)
+        public UserAuthService(IMemoryCache cache, IConfiguration conf, IHttpContextAccessor httpContext, ILogger<UserAuthService> logger)
         {
             _cache = cache;
             _conf = conf;

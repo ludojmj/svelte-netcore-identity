@@ -5,17 +5,17 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Server.DbModels;
 using Server.Models;
-using Server.Repository.Interfaces;
+using Server.Service.Interfaces;
 
-namespace Server.Repository
+namespace Server.Service
 {
-    public class UserRepo : IUserRepo
+    public class UserService : IUserService
     {
         private const int CstItemsPerPage = 6;
-        private readonly IUserAuthRepo _userAuth;
+        private readonly IUserAuthService _userAuth;
         private readonly StuffDbContext _context;
 
-        public UserRepo(StuffDbContext context, IUserAuthRepo userAuth)
+        public UserService(StuffDbContext context, IUserAuthService userAuth)
         {
             _context = context;
             _userAuth = userAuth;

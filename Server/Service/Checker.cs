@@ -1,7 +1,7 @@
 using System;
 using Server.Models;
 
-namespace Server.Repository
+namespace Server.Service
 {
     public static class Checker
     {

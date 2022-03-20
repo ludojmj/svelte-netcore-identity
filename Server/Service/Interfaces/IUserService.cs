@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
 using Server.Models;
 
-namespace Server.Repository.Interfaces
+namespace Server.Service.Interfaces
 {
-    public interface IUserRepo
+    public interface IUserService
     {
         Task<DirectoryModel> GetListAsync(int page);
         Task<DirectoryModel> SearchListAsync(string search);

@@ -1,6 +1,6 @@
 using System;
 
-namespace Server.Repository
+namespace Server.Service
 {
     public static class DateTranslator
     {

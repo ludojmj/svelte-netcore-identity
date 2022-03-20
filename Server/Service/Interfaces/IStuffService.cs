@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
 using Server.Models;
 
-namespace Server.Repository.Interfaces
+namespace Server.Service.Interfaces
 {
-    public interface IStuffRepo
+    public interface IStuffService
     {
         Task<StuffModel> GetListAsync(int page);
         Task<StuffModel> SearchListAsync(string search);

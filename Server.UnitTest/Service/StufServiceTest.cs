@@ -8,13 +8,13 @@ using Moq;
 using Xunit;
 using Server.DbModels;
 using Server.Models;
-using Server.Repository;
-using Server.Repository.Interfaces;
+using Server.Service;
+using Server.Service.Interfaces;
 using Server.Shared;
 
-namespace Server.UnitTest.Repository
+namespace Server.UnitTest.Service
 {
-    public class StuffRepositoryTest
+    public class StuffServiceTest
     {
         private static readonly UserModel UserModelTest = new UserModel()
         {
@@ -55,9 +55,9 @@ namespace Server.UnitTest.Repository
 
         private readonly SqliteConnection _connection;
         private readonly StuffDbContext _context;
-        private readonly IStuffRepo _stuffRepo;
+        private readonly IStuffService _stuffService;
 
-        public StuffRepositoryTest()
+        public StuffServiceTest()
         {
             _connection = new SqliteConnection("DataSource=:memory:");
             _connection.Open();
@@ -66,8 +66,8 @@ namespace Server.UnitTest.Repository
                 .Options;
             _context = new StuffDbContext(options);
             _context.Database.EnsureCreated();
-            var mockAuth = Mock.Of<IUserAuthRepo>(x => x.GetCurrentUserAsync(It.IsAny<string>()) == Task.FromResult(_dbUser));
-            _stuffRepo = new StuffRepo(_context, mockAuth);
+            var mockAuth = Mock.Of<IUserAuthService>(x => x.GetCurrentUserAsync(It.IsAny<string>()) == Task.FromResult(_dbUser));
+            _stuffService = new StuffService(_context, mockAuth);
         }
 
         [Fact]
@@ -79,7 +79,7 @@ namespace Server.UnitTest.Repository
 
         // ***** ***** ***** LIST
         [Fact]
-        public async Task StuffRepo_GetListAsync_ShouldReturn_Ok()
+        public async Task StuffService_GetListAsync_ShouldReturn_Ok()
         {
             // Arrange
             _context.Add(_dbUser);
@@ -87,16 +87,16 @@ namespace Server.UnitTest.Repository
             _context.SaveChanges();
 
             // Act
-            var repoResult = await _stuffRepo.GetListAsync(1);
+            var serviceResult = await _stuffService.GetListAsync(1);
 
             // Assert
             var expected = DatumModelTest.Id;
-            var actual = repoResult.DatumList.ToArray()[0].Id;
+            var actual = serviceResult.DatumList.ToArray()[0].Id;
             Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public async Task StuffRepo_GetListAsync_ShouldReturn_PageOne()
+        public async Task StuffService_GetListAsync_ShouldReturn_PageOne()
         {
             // Arrange
             int requestedPage = 2;
@@ -105,17 +105,17 @@ namespace Server.UnitTest.Repository
             _context.SaveChanges();
 
             // Act
-            var repoResult = await _stuffRepo.GetListAsync(requestedPage);
+            var serviceResult = await _stuffService.GetListAsync(requestedPage);
 
             // Assert
             var expected = 1;
-            var actual = repoResult.Page;
+            var actual = serviceResult.Page;
             Assert.Equal(expected, actual);
         }
 
         // ***** ***** ***** SEARCH
         [Fact]
-        public async Task StuffRepo_SearchListAsync_ShouldReturn_Ok()
+        public async Task StuffService_SearchListAsync_ShouldReturn_Ok()
         {
             // Arrange
             _context.Add(_dbUser);
@@ -123,16 +123,16 @@ namespace Server.UnitTest.Repository
             _context.SaveChanges();
 
             // Act
-            var repoResult = await _stuffRepo.SearchListAsync("LABEL");
+            var serviceResult = await _stuffService.SearchListAsync("LABEL");
 
             // Assert
             var expected = DatumModelTest.Id;
-            var actual = repoResult.DatumList.ToArray()[0].Id;
+            var actual = serviceResult.DatumList.ToArray()[0].Id;
             Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public async Task StuffRepo_SearchListAsync_ShouldThrow_ArgumentException()
+        public async Task StuffService_SearchListAsync_ShouldThrow_ArgumentException()
         {
             // Arrange
             _context.Add(_dbUser);
@@ -150,8 +150,8 @@ namespace Server.UnitTest.Repository
             _context.SaveChanges();
 
             // Act
-            var repoResult = _stuffRepo.SearchListAsync("LABEL");
-            var exception = await Record.ExceptionAsync(() => repoResult);
+            var serviceResult = _stuffService.SearchListAsync("LABEL");
+            var exception = await Record.ExceptionAsync(() => serviceResult);
 
             // Assert
             Assert.NotNull(exception);
@@ -161,7 +161,7 @@ namespace Server.UnitTest.Repository
 
         // ***** ***** ***** CREATE
         [Fact]
-        public async Task StuffRepo_CreateAsync_ShouldReturn_Ok()
+        public async Task StuffService_CreateAsync_ShouldReturn_Ok()
         {
             // Arrange1
             // Existing user
@@ -169,10 +169,10 @@ namespace Server.UnitTest.Repository
             _context.SaveChanges();
 
             // Act1
-            var repoResult = await _stuffRepo.CreateAsync(DatumModelTest);
+            var serviceResult = await _stuffService.CreateAsync(DatumModelTest);
 
             // Assert1
-            int actual = repoResult.Id.Count(x => x == '-');
+            int actual = serviceResult.Id.Count(x => x == '-');
             int expected = 4;
             Assert.Equal(expected, actual);
 
@@ -182,10 +182,10 @@ namespace Server.UnitTest.Repository
             DatumModelTest.User = null;
 
             // Act2
-            repoResult = await _stuffRepo.CreateAsync(DatumModelTest);
+            serviceResult = await _stuffService.CreateAsync(DatumModelTest);
 
             // Assert2
-            actual = repoResult.Id.Count(x => x == '-');
+            actual = serviceResult.Id.Count(x => x == '-');
             expected = 4;
             Assert.Equal(expected, actual);
 
@@ -194,7 +194,7 @@ namespace Server.UnitTest.Repository
         }
 
         [Fact]
-        public async Task StuffRepo_CreateAsync_ShouldReturn_ArgumentException()
+        public async Task StuffService_CreateAsync_ShouldReturn_ArgumentException()
         {
             // Arrange
             DatumModelTest.Label = string.Empty;
@@ -202,8 +202,8 @@ namespace Server.UnitTest.Repository
             _context.SaveChanges();
 
             // Act
-            var repoResult = _stuffRepo.CreateAsync(DatumModelTest);
-            var exception = await Record.ExceptionAsync(() => repoResult);
+            var serviceResult = _stuffService.CreateAsync(DatumModelTest);
+            var exception = await Record.ExceptionAsync(() => serviceResult);
 
             // Assert
             Assert.NotNull(exception);
@@ -216,7 +216,7 @@ namespace Server.UnitTest.Repository
 
         // ***** ***** ***** READ SINGLE
         [Fact]
-        public async Task StuffRepo_ReadAsync_ShouldReturn_Ok()
+        public async Task StuffService_ReadAsync_ShouldReturn_Ok()
         {
             // Arrange
             _context.Add(_dbUser);
@@ -224,23 +224,23 @@ namespace Server.UnitTest.Repository
             _context.SaveChanges();
 
             // Act
-            var repoResult = await _stuffRepo.ReadAsync("1");
+            var serviceResult = await _stuffService.ReadAsync("1");
 
             // Assert
             var expected = DatumModelTest.Id;
-            var actual = repoResult.Id;
+            var actual = serviceResult.Id;
             Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public async Task StuffRepo_ReadAsync_ShouldThrow_NotFoundException()
+        public async Task StuffService_ReadAsync_ShouldThrow_NotFoundException()
         {
             // Arrange
             // No stuff
 
             // Act
-            var repoResult = _stuffRepo.ReadAsync("2");
-            var exception = await Record.ExceptionAsync(() => repoResult);
+            var serviceResult = _stuffService.ReadAsync("2");
+            var exception = await Record.ExceptionAsync(() => serviceResult);
 
             // Assert
             Assert.NotNull(exception);
@@ -250,7 +250,7 @@ namespace Server.UnitTest.Repository
 
         // ***** ***** ***** UPDATE
         [Fact]
-        public async Task StuffRepo_UpdateAsync_ShouldReturn_Ok()
+        public async Task StuffService_UpdateAsync_ShouldReturn_Ok()
         {
             // Arrange
             _context.Add(_dbUser);
@@ -258,23 +258,23 @@ namespace Server.UnitTest.Repository
             _context.SaveChanges();
 
             // Act
-            var repoResult = await _stuffRepo.UpdateAsync("1", DatumModelTest);
+            var serviceResult = await _stuffService.UpdateAsync("1", DatumModelTest);
 
             // Assert
             var expected = DatumModelTest.Id;
-            var actual = repoResult.Id;
+            var actual = serviceResult.Id;
             Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public async Task StuffRepo_UpdateAsync_ShouldThrow_ArgumentException()
+        public async Task StuffService_UpdateAsync_ShouldThrow_ArgumentException()
         {
             // Arrange1
             // _datumModelTest.Id != input.Id
 
             // Act1
-            var repoResult = _stuffRepo.UpdateAsync("2", DatumModelTest);
-            var exception = await Record.ExceptionAsync(() => repoResult);
+            var serviceResult = _stuffService.UpdateAsync("2", DatumModelTest);
+            var exception = await Record.ExceptionAsync(() => serviceResult);
 
             // Assert1
             Assert.NotNull(exception);
@@ -286,8 +286,8 @@ namespace Server.UnitTest.Repository
             DatumModelTest.Id = "StuffNotFound";
 
             // Act2
-            repoResult = _stuffRepo.UpdateAsync("StuffNotFound", DatumModelTest);
-            exception = await Record.ExceptionAsync(() => repoResult);
+            serviceResult = _stuffService.UpdateAsync("StuffNotFound", DatumModelTest);
+            exception = await Record.ExceptionAsync(() => serviceResult);
 
             // Assert2
             Assert.NotNull(exception);
@@ -301,8 +301,8 @@ namespace Server.UnitTest.Repository
             DatumModelTest.Label = string.Empty;
 
             // Act3
-            repoResult = _stuffRepo.UpdateAsync(DatumModelTest.Id, DatumModelTest);
-            exception = await Record.ExceptionAsync(() => repoResult);
+            serviceResult = _stuffService.UpdateAsync(DatumModelTest.Id, DatumModelTest);
+            exception = await Record.ExceptionAsync(() => serviceResult);
 
             // Assert3
             Assert.NotNull(exception);
@@ -321,8 +321,8 @@ namespace Server.UnitTest.Repository
             _dbUser.UsrId = "11";
 
             // Act4
-            repoResult = _stuffRepo.UpdateAsync("1", DatumModelTest);
-            exception = await Record.ExceptionAsync(() => repoResult);
+            serviceResult = _stuffService.UpdateAsync("1", DatumModelTest);
+            exception = await Record.ExceptionAsync(() => serviceResult);
 
             // Assert4
             Assert.NotNull(exception);
@@ -336,7 +336,7 @@ namespace Server.UnitTest.Repository
 
         // ***** ***** ***** DELETE
         [Fact]
-        public async Task StuffRepo_DeleteAsync_ShouldReturn_Ok()
+        public async Task StuffService_DeleteAsync_ShouldReturn_Ok()
         {
             // Arrange
             _context.Add(_dbUser);
@@ -344,7 +344,7 @@ namespace Server.UnitTest.Repository
             _context.SaveChanges();
 
             // Act
-            await _stuffRepo.DeleteAsync("1");
+            await _stuffService.DeleteAsync("1");
             var actual = _context.TStuff.FirstOrDefault(x => x.StfId.Equals("1"));
 
             // Assert
@@ -352,14 +352,14 @@ namespace Server.UnitTest.Repository
         }
 
         [Fact]
-        public async Task StuffRepo_DeleteAsync_ShouldThrow_ArgumentException()
+        public async Task StuffService_DeleteAsync_ShouldThrow_ArgumentException()
         {
             // Arrange1
             // No stuff
 
             // Act1
-            var repoResult = _stuffRepo.DeleteAsync("2");
-            var exception = await Record.ExceptionAsync(() => repoResult);
+            var serviceResult = _stuffService.DeleteAsync("2");
+            var exception = await Record.ExceptionAsync(() => serviceResult);
 
             // Assert1
             Assert.NotNull(exception);
@@ -376,8 +376,8 @@ namespace Server.UnitTest.Repository
             _dbUser.UsrId = "11";
 
             // Act2
-            repoResult = _stuffRepo.DeleteAsync("1");
-            exception = await Record.ExceptionAsync(() => repoResult);
+            serviceResult = _stuffService.DeleteAsync("1");
+            exception = await Record.ExceptionAsync(() => serviceResult);
 
             // Assert2
             Assert.NotNull(exception);

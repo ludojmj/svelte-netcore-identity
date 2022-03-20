@@ -4,7 +4,7 @@ using System.Linq;
 using Server.DbModels;
 using Server.Models;
 
-namespace Server.Repository
+namespace Server.Service
 {
     public static class StuffTranslator
     {

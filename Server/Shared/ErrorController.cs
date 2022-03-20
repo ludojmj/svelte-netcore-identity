@@ -10,16 +10,9 @@ namespace Server.Shared
     [ApiExplorerSettings(IgnoreApi = true)]
     public class ErrorController : ControllerBase
     {
-        private readonly IWebHostEnvironment _env;
-        private readonly ILogger _logger;
-
-        public ErrorController(IWebHostEnvironment env, ILogger<ErrorController> logger)
-        {
-            _env = env;
-            _logger = logger;
-        }
-
-        public IActionResult Error()
+        public IActionResult Error(
+            [FromServices] IWebHostEnvironment env,
+            [FromServices] ILogger<ErrorController> logger)
         {
             var context = HttpContext.Features.Get<IExceptionHandlerFeature>();
             if (context == null)
@@ -28,7 +21,7 @@ namespace Server.Shared
             }
 
             var exception = context.Error;
-            _logger.LogCritical(exception, "Error");
+            logger.LogCritical(exception, "Error");
             var msg = exception.InnerException == null
                 ? exception.Message
                 : exception.InnerException.Message;
@@ -38,7 +31,7 @@ namespace Server.Shared
                 return NotFound(new ErrorModel { Error = msg });
             }
 
-            var error = new ErrorModel { Error = _env.IsDevelopment() ? msg : "An error occured. Please try again later." };
+            var error = new ErrorModel { Error = env.IsDevelopment() ? msg : "An error occured. Please try again later." };
             return BadRequest(error);
         }
     }

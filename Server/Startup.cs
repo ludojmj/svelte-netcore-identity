@@ -13,8 +13,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.ApplicationInsights;
 using Microsoft.OpenApi.Models;
 using Server.DbModels;
-using Server.Repository;
-using Server.Repository.Interfaces;
+using Server.Service;
+using Server.Service.Interfaces;
 using Server.Shared;
 
 namespace Server
@@ -33,6 +33,7 @@ namespace Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHealthChecks();
             services.AddControllers();
             services.AddCors();
             services.AddMemoryCache();
@@ -63,7 +64,7 @@ namespace Server
             {
                 options.Filters.Add(typeof(TraceHandlerFilterAttribute));
                 options.Filters.Add(typeof(ModelValidationFilterAttribute));
-            }).SetCompatibilityVersion(CompatibilityVersion.Latest);
+            });
 
             services.Configure<ApiBehaviorOptions>(options =>
             {   // Managed by Shared/ModelValidationFilter.cs
@@ -113,36 +114,26 @@ namespace Server
                 });
             });
 
-            // Register Repo
-            services.AddScoped<IUserAuthRepo, UserAuthRepo>();
-            services.AddScoped<IUserRepo, UserRepo>();
-            services.AddScoped<IStuffRepo, StuffRepo>();
+            // Register Service
+            services.AddScoped<IUserAuthService, UserAuthService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IStuffService, StuffService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        // https://docs.microsoft.com/fr-fr/aspnet/core/fundamentals/middleware/?view=aspnetcore-6.0
         public void Configure(IApplicationBuilder app)
         {
-            if (_env.IsDevelopment())
-            {
-                app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-            }
-            else
-            {
-                var corsList = _conf.GetSection("AuthCors").Get<string[]>();
-                app.UseCors(builder => builder
-                    .WithOrigins(corsList)
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                );
-            }
-
+            app.UseExceptionHandler("/api/Error");
+            app.UseHsts();
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
             app.UseFileServer(new FileServerOptions
             {
                 EnableDirectoryBrowsing = false,
                 EnableDefaultFiles = true,
                 DefaultFilesOptions = { DefaultFileNames = { "index.html" } }
             });
-
             if (!_env.IsProduction())
             {
                 app.UseSwagger(c =>
@@ -158,17 +149,28 @@ namespace Server
                 });
             }
 
-            app.UseExceptionHandler("/api/Error");
-            app.UseHsts();
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
             app.UseRouting();
+            if (_env.IsDevelopment())
+            {
+                app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            }
+            else
+            {
+                var corsList = _conf.GetSection("AuthCors").Get<string[]>();
+                app.UseCors(builder => builder
+                    .WithOrigins(corsList)
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                );
+            }
+
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers().RequireAuthorization();
                 endpoints.MapFallbackToFile("/index.html");
+                endpoints.MapHealthChecks("/health");
             });
         }
     }

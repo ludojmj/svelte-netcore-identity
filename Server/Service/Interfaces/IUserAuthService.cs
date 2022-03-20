@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
 using Server.DbModels;
 
-namespace Server.Repository.Interfaces
+namespace Server.Service.Interfaces
 {
-    public interface IUserAuthRepo
+    public interface IUserAuthService
     {
         Task<TUser> GetCurrentUserAsync(string operation);
     }

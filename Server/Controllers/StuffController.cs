@@ -1,59 +1,64 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Server.Models;
-using Server.Repository.Interfaces;
+using Server.Service.Interfaces;
 
 namespace Server.Controllers
 {
     [Route("api/[controller]")]
     public class StuffController : ControllerBase
     {
-        private readonly IStuffRepo _stuffRepo;
-
-        public StuffController(IStuffRepo stuffRepo)
-        {
-            _stuffRepo = stuffRepo;
-        }
-
         // GET STUFF LIST api/stuff?page=2&search=xxx
         [HttpGet]
-        public async Task<IActionResult> GetList([FromQuery] int page, [FromQuery] string search)
+        public async Task<IActionResult> GetList(
+            [FromQuery] int page,
+            [FromQuery] string search,
+            [FromServices] IStuffService stuffService)
         {
             StuffModel result = string.IsNullOrWhiteSpace(search)
-                ? await _stuffRepo.GetListAsync(page)
-                : await _stuffRepo.SearchListAsync(search);
+                ? await stuffService.GetListAsync(page)
+                : await stuffService.SearchListAsync(search);
             return Ok(result);
         }
 
         // CREATE STUFF api/stuff + {body}
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] DatumModel input)
+        public async Task<IActionResult> Create(
+            [FromBody] DatumModel input,
+            [FromServices] IStuffService stuffService)
         {
-            DatumModel result = await _stuffRepo.CreateAsync(input);
+            DatumModel result = await stuffService.CreateAsync(input);
             return CreatedAtAction(nameof(Read), new { id = result.Id }, result);
         }
 
         // READ STUFF api/stuff/id
         [HttpGet("{id}")]
-        public async Task<IActionResult> Read(string id)
+        public async Task<IActionResult> Read(
+            string id,
+            [FromServices] IStuffService stuffService)
         {
-            DatumModel result = await _stuffRepo.ReadAsync(id);
+            DatumModel result = await stuffService.ReadAsync(id);
             return Ok(result);
         }
 
         // UPDATE STUFF api/stuff/id + {body}
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string id, [FromBody] DatumModel input)
+        public async Task<IActionResult> Update(
+            string id,
+            [FromBody] DatumModel input,
+            [FromServices] IStuffService stuffService)
         {
-            DatumModel result = await _stuffRepo.UpdateAsync(id, input);
+            DatumModel result = await stuffService.UpdateAsync(id, input);
             return Ok(result);
         }
 
         // DELETE STUFF api/stuff/id
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(
+            string id,
+            [FromServices] IStuffService stuffService)
         {
-            await _stuffRepo.DeleteAsync(id);
+            await stuffService.DeleteAsync(id);
             return NoContent();
         }
     }

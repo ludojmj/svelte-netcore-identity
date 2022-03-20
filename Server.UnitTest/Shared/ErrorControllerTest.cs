@@ -23,13 +23,13 @@ namespace Server.UnitTest.Shared
             var context = new DefaultHttpContext();
             context.Features.Set<IExceptionHandlerFeature>(mockException);
 
-            var controller = new ErrorController(mockEnv, mockLog)
+            var controller = new ErrorController()
             {
                 ControllerContext = new ControllerContext() { HttpContext = context }
             };
 
             // Act
-            IActionResult actionResult = controller.Error();
+            IActionResult actionResult = controller.Error(mockEnv, mockLog);
 
             // Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(actionResult);
@@ -50,13 +50,13 @@ namespace Server.UnitTest.Shared
             var context = new DefaultHttpContext();
             context.Features.Set<IExceptionHandlerFeature>(mockException);
 
-            var controller = new ErrorController(mockEnv, mockLog)
+            var controller = new ErrorController()
             {
                 ControllerContext = new ControllerContext() { HttpContext = context }
             };
 
             // Act
-            IActionResult actionResult = controller.Error();
+            IActionResult actionResult = controller.Error(mockEnv, mockLog);
 
             // Assert
             var notFoundResult = Assert.IsType<BadRequestObjectResult>(actionResult);
@@ -78,13 +78,13 @@ namespace Server.UnitTest.Shared
             var context = new DefaultHttpContext();
             context.Features.Set<IExceptionHandlerFeature>(mockException);
 
-            var controller = new ErrorController(mockEnv, mockLog)
+            var controller = new ErrorController()
             {
                 ControllerContext = new ControllerContext() { HttpContext = context }
             };
 
             // Act
-            IActionResult actionResult = controller.Error();
+            IActionResult actionResult = controller.Error(mockEnv, mockLog);
 
             // Assert
             var notFoundResult = Assert.IsType<BadRequestObjectResult>(actionResult);

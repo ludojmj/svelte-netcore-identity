@@ -6,7 +6,7 @@ using Moq;
 using Xunit;
 using Server.Controllers;
 using Server.Models;
-using Server.Repository.Interfaces;
+using Server.Service.Interfaces;
 
 namespace Server.UnitTest.Controllers
 {
@@ -43,12 +43,12 @@ namespace Server.UnitTest.Controllers
         public async Task StuffController_GetStuffList_ShouldReturn_Ok()
         {
             // Arrange
-            var mockStuffRepo = Mock.Of<IStuffRepo>(x => x.GetListAsync(1) == Task.FromResult(TestStuff));
-            var controller = new StuffController(mockStuffRepo);
+            var mockStuffService = Mock.Of<IStuffService>(x => x.GetListAsync(1) == Task.FromResult(TestStuff));
+            var controller = new StuffController();
             int existingPage = 1;
 
             // Act
-            IActionResult actionResult = await controller.GetList(existingPage, null);
+            IActionResult actionResult = await controller.GetList(existingPage, null, mockStuffService);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(actionResult);
@@ -63,11 +63,11 @@ namespace Server.UnitTest.Controllers
         public async Task StuffController_SearchStuffList_ShouldReturn_Ok()
         {
             // Arrange
-            var mockStuffRepo = Mock.Of<IStuffRepo>(x => x.SearchListAsync("foo") == Task.FromResult(TestStuff));
-            var controller = new StuffController(mockStuffRepo);
+            var mockStuffService = Mock.Of<IStuffService>(x => x.SearchListAsync("foo") == Task.FromResult(TestStuff));
+            var controller = new StuffController();
 
             // Act
-            IActionResult actionResult = await controller.GetList(0, "foo");
+            IActionResult actionResult = await controller.GetList(0, "foo", mockStuffService);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(actionResult);
@@ -82,11 +82,11 @@ namespace Server.UnitTest.Controllers
         public async Task StuffController_Create_ShouldReturnCreated()
         {
             // Arrange
-            var mockStuffRepo = Mock.Of<IStuffRepo>(x => x.CreateAsync(TestDatum) == Task.FromResult(TestDatum));
-            var controller = new StuffController(mockStuffRepo);
+            var mockStuffService = Mock.Of<IStuffService>(x => x.CreateAsync(TestDatum) == Task.FromResult(TestDatum));
+            var controller = new StuffController();
 
             // Act
-            IActionResult actionResult = await controller.Create(TestDatum);
+            IActionResult actionResult = await controller.Create(TestDatum, mockStuffService);
 
             // Assert
             var okResult = Assert.IsType<CreatedAtActionResult>(actionResult);
@@ -99,11 +99,11 @@ namespace Server.UnitTest.Controllers
         public async Task StuffController_Read_ShouldReturn_Ok()
         {
             // Arrange
-            var mockStuffRepo = Mock.Of<IStuffRepo>(x => x.ReadAsync("1") == Task.FromResult(TestDatum));
-            var controller = new StuffController(mockStuffRepo);
+            var mockStuffService = Mock.Of<IStuffService>(x => x.ReadAsync("1") == Task.FromResult(TestDatum));
+            var controller = new StuffController();
 
             // Act
-            IActionResult actionResult = await controller.Read("1");
+            IActionResult actionResult = await controller.Read("1", mockStuffService);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(actionResult);
@@ -117,11 +117,11 @@ namespace Server.UnitTest.Controllers
         public async Task StuffController_Read_ShouldReturn_Null()
         {
             // Arrange
-            var mockUserRepo = Mock.Of<IStuffRepo>();
-            var controller = new StuffController(mockUserRepo);
+            var mockStuffService = Mock.Of<IStuffService>();
+            var controller = new StuffController();
 
             // Act
-            IActionResult actionResult = await controller.Read("1");
+            IActionResult actionResult = await controller.Read("1", mockStuffService);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(actionResult);
@@ -136,12 +136,12 @@ namespace Server.UnitTest.Controllers
         public async Task StuffController_UpdateStuff_ShouldReturn_Ok()
         {
             // Arrange
-            var mockStuffRepo = Mock.Of<IStuffRepo>(x => x.UpdateAsync("1", TestDatum) == Task.FromResult(TestDatum));
-            var controller = new StuffController(mockStuffRepo);
+            var mockStuffService = Mock.Of<IStuffService>(x => x.UpdateAsync("1", TestDatum) == Task.FromResult(TestDatum));
+            var controller = new StuffController();
             string existingId = "1";
 
             // Act
-            IActionResult actionResult = await controller.Update(existingId, TestDatum);
+            IActionResult actionResult = await controller.Update(existingId, TestDatum, mockStuffService);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(actionResult);
@@ -154,12 +154,12 @@ namespace Server.UnitTest.Controllers
         public async Task StuffController_DeleteStuff_ShouldReturnNoContent()
         {
             // Arrange
-            var mockStuffRepo = Mock.Of<IStuffRepo>();
-            var controller = new StuffController(mockStuffRepo);
+            var mockStuffService = Mock.Of<IStuffService>();
+            var controller = new StuffController();
             string badId = "2";
 
             // Act
-            IActionResult actionResult = await controller.Delete(badId);
+            IActionResult actionResult = await controller.Delete(badId, mockStuffService);
 
             // Assert
             Assert.IsType<NoContentResult>(actionResult);
