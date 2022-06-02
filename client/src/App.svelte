@@ -19,7 +19,7 @@
   import Error from "./components/Error.svelte";
 
   let oidcConf = {
-    issuer: "https://demo.identityserver.io",
+    issuer: "https://demo.duendesoftware.com",
     client_id: "interactive.public",
     redirect_uri: "http://localhost:3000",
     post_logout_redirect_uri: "http://localhost:3000/",
