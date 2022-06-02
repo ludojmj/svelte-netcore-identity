@@ -146,6 +146,7 @@ namespace Server
                 app.UseSwaggerUI(c =>
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Server V1");
+                    c.EnableTryItOutByDefault();
                 });
             }
 
