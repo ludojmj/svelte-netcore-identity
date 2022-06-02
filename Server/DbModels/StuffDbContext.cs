@@ -13,8 +13,8 @@ namespace Server.DbModels
         {
         }
 
-        public virtual DbSet<TStuff> TStuff { get; set; }
-        public virtual DbSet<TUser> TUser { get; set; }
+        public virtual DbSet<TStuff> TStuffs { get; set; }
+        public virtual DbSet<TUser> TUsers { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -47,7 +47,7 @@ namespace Server.DbModels
                     .HasColumnName("stf_user_id");
 
                 entity.HasOne(d => d.StfUser)
-                    .WithMany(p => p.TStuff)
+                    .WithMany(p => p.TStuffs)
                     .HasForeignKey(d => d.StfUserId);
             });
 

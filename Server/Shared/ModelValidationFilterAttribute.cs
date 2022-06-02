@@ -1,32 +1,29 @@
-using System;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Server.Shared
+namespace Server.Shared;
+
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+public class ModelValidationFilterAttribute : ActionFilterAttribute
 {
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-    public class ModelValidationFilterAttribute : ActionFilterAttribute
+    public override void OnActionExecuting(ActionExecutingContext context)
     {
-        public override void OnActionExecuting(ActionExecutingContext context)
+        if (context == null)
         {
-            if (context == null)
-            {
-                base.OnActionExecuting(null);
-                return;
-            }
-
-            if (!context.ModelState.IsValid)
-            {
-                var err = context.ModelState.Values.SelectMany(value => value.Errors).FirstOrDefault();
-                if (err == null)
-                {
-                    throw new ArgumentException("Model state is invalid.");
-                }
-
-                throw new ArgumentException(err.ErrorMessage);
-            }
-
-            base.OnActionExecuting(context);
+            base.OnActionExecuting(null);
+            return;
         }
+
+        if (!context.ModelState.IsValid)
+        {
+            var err = context.ModelState.Values.SelectMany(value => value.Errors).FirstOrDefault();
+            if (err == null)
+            {
+                throw new ArgumentException("Model state is invalid.");
+            }
+
+            throw new ArgumentException(err.ErrorMessage);
+        }
+
+        base.OnActionExecuting(context);
     }
 }

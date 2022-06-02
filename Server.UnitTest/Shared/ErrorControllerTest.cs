@@ -1,4 +1,3 @@
-using System;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -8,90 +7,89 @@ using Moq;
 using Xunit;
 using Server.Shared;
 
-namespace Server.UnitTest.Shared
+namespace Server.UnitTest.Shared;
+
+public class ErrorControllerTest
 {
-    public class ErrorControllerTest
+    [Fact]
+    public void ErrorController_NotFoundObjectResult()
     {
-        [Fact]
-        public void ErrorController_NotFoundObjectResult()
+        // Arrange
+        var mockEnv = Mock.Of<IWebHostEnvironment>();
+        var mockLog = Mock.Of<ILogger<ErrorController>>();
+        var mockException = Mock.Of<IExceptionHandlerFeature>(x => x.Error == new NotFoundException("Not found"));
+
+        var context = new DefaultHttpContext();
+        context.Features.Set<IExceptionHandlerFeature>(mockException);
+
+        var controller = new ErrorController()
         {
-            // Arrange
-            var mockEnv = Mock.Of<IWebHostEnvironment>();
-            var mockLog = Mock.Of<ILogger<ErrorController>>();
-            var mockException = Mock.Of<IExceptionHandlerFeature>(x => x.Error == new NotFoundException("Not found"));
+            ControllerContext = new ControllerContext() { HttpContext = context }
+        };
 
-            var context = new DefaultHttpContext();
-            context.Features.Set<IExceptionHandlerFeature>(mockException);
+        // Act
+        IActionResult actionResult = controller.Error(mockEnv, mockLog);
 
-            var controller = new ErrorController()
-            {
-                ControllerContext = new ControllerContext() { HttpContext = context }
-            };
+        // Assert
+        var notFoundResult = Assert.IsType<NotFoundObjectResult>(actionResult);
+        var contentResult = Assert.IsType<ErrorModel>(notFoundResult.Value);
+        var expected = "Not found";
+        var actual = contentResult.Error;
+        Assert.Equal(expected, actual);
+    }
 
-            // Act
-            IActionResult actionResult = controller.Error(mockEnv, mockLog);
+    [Fact]
+    public void ErrorHandlerFilter_BadRequestObjectResult_Development()
+    {
+        // Arrange
+        var mockEnv = Mock.Of<IWebHostEnvironment>(x => x.EnvironmentName == "Development");
+        var mockLog = Mock.Of<ILogger<ErrorController>>();
+        var mockException = Mock.Of<IExceptionHandlerFeature>(x => x.Error == new ArgumentException("Should be displayed"));
 
-            // Assert
-            var notFoundResult = Assert.IsType<NotFoundObjectResult>(actionResult);
-            var contentResult = Assert.IsType<ErrorModel>(notFoundResult.Value);
-            var expected = "Not found";
-            var actual = contentResult.Error;
-            Assert.Equal(expected, actual);
-        }
+        var context = new DefaultHttpContext();
+        context.Features.Set<IExceptionHandlerFeature>(mockException);
 
-        [Fact]
-        public void ErrorHandlerFilter_BadRequestObjectResult_Development()
+        var controller = new ErrorController()
         {
-            // Arrange
-            var mockEnv = Mock.Of<IWebHostEnvironment>(x => x.EnvironmentName == "Development");
-            var mockLog = Mock.Of<ILogger<ErrorController>>();
-            var mockException = Mock.Of<IExceptionHandlerFeature>(x => x.Error == new ArgumentException("Should be displayed"));
+            ControllerContext = new ControllerContext() { HttpContext = context }
+        };
 
-            var context = new DefaultHttpContext();
-            context.Features.Set<IExceptionHandlerFeature>(mockException);
+        // Act
+        IActionResult actionResult = controller.Error(mockEnv, mockLog);
 
-            var controller = new ErrorController()
-            {
-                ControllerContext = new ControllerContext() { HttpContext = context }
-            };
-
-            // Act
-            IActionResult actionResult = controller.Error(mockEnv, mockLog);
-
-            // Assert
-            var notFoundResult = Assert.IsType<BadRequestObjectResult>(actionResult);
-            var contentResult = Assert.IsType<ErrorModel>(notFoundResult.Value);
-            var expected = "Should be displayed";
-            var actual = contentResult.Error;
-            Assert.Equal(expected, actual);
-        }
+        // Assert
+        var notFoundResult = Assert.IsType<BadRequestObjectResult>(actionResult);
+        var contentResult = Assert.IsType<ErrorModel>(notFoundResult.Value);
+        var expected = "Should be displayed";
+        var actual = contentResult.Error;
+        Assert.Equal(expected, actual);
+    }
 
 
-        [Fact]
-        public void ErrorHandlerFilter_BadRequestObjectResult_Production()
+    [Fact]
+    public void ErrorHandlerFilter_BadRequestObjectResult_Production()
+    {
+        // Arrange
+        var mockEnv = Mock.Of<IWebHostEnvironment>(x => x.EnvironmentName == "Production");
+        var mockLog = Mock.Of<ILogger<ErrorController>>();
+        var mockException = Mock.Of<IExceptionHandlerFeature>(x => x.Error == new ArgumentException("Should not be displayed"));
+
+        var context = new DefaultHttpContext();
+        context.Features.Set<IExceptionHandlerFeature>(mockException);
+
+        var controller = new ErrorController()
         {
-            // Arrange
-            var mockEnv = Mock.Of<IWebHostEnvironment>(x => x.EnvironmentName == "Production");
-            var mockLog = Mock.Of<ILogger<ErrorController>>();
-            var mockException = Mock.Of<IExceptionHandlerFeature>(x => x.Error == new ArgumentException("Should not be displayed"));
+            ControllerContext = new ControllerContext() { HttpContext = context }
+        };
 
-            var context = new DefaultHttpContext();
-            context.Features.Set<IExceptionHandlerFeature>(mockException);
+        // Act
+        IActionResult actionResult = controller.Error(mockEnv, mockLog);
 
-            var controller = new ErrorController()
-            {
-                ControllerContext = new ControllerContext() { HttpContext = context }
-            };
-
-            // Act
-            IActionResult actionResult = controller.Error(mockEnv, mockLog);
-
-            // Assert
-            var notFoundResult = Assert.IsType<BadRequestObjectResult>(actionResult);
-            var contentResult = Assert.IsType<ErrorModel>(notFoundResult.Value);
-            var expected = "An error occured. Please try again later.";
-            var actual = contentResult.Error;
-            Assert.Equal(expected, actual);
-        }
+        // Assert
+        var notFoundResult = Assert.IsType<BadRequestObjectResult>(actionResult);
+        var contentResult = Assert.IsType<ErrorModel>(notFoundResult.Value);
+        var expected = "An error occured. Please try again later.";
+        var actual = contentResult.Error;
+        Assert.Equal(expected, actual);
     }
 }

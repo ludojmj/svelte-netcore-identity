@@ -7,7 +7,7 @@ namespace Server.DbModels
     {
         public TUser()
         {
-            TStuff = new HashSet<TStuff>();
+            TStuffs = new HashSet<TStuff>();
         }
 
         public string UsrId { get; set; }
@@ -18,6 +18,6 @@ namespace Server.DbModels
         public string UsrCreatedAt { get; set; }
         public string UsrUpdatedAt { get; set; }
 
-        public virtual ICollection<TStuff> TStuff { get; set; }
+        public virtual ICollection<TStuff> TStuffs { get; set; }
     }
 }

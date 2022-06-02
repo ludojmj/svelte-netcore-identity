@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
@@ -11,37 +8,36 @@ using Moq;
 using Xunit;
 using Server.Shared;
 
-namespace Server.UnitTest.Shared
+namespace Server.UnitTest.Shared;
+
+public class ModelValidationTest
 {
-    public class ModelValidationTest
+    [Fact]
+    public void ModelValidationFilterAttribute_ShouldThrowArgumentException_IfModelIsInvalid()
     {
-        [Fact]
-        public void ModelValidationFilterAttribute_ShouldThrowArgumentException_IfModelIsInvalid()
-        {
-            // Arrange
-            var validationFilter = new ModelValidationFilterAttribute();
-            var modelState = new ModelStateDictionary();
-            modelState.AddModelError("year", "invalid");
+        // Arrange
+        var validationFilter = new ModelValidationFilterAttribute();
+        var modelState = new ModelStateDictionary();
+        modelState.AddModelError("year", "invalid");
 
-            var actionContext = new ActionContext(
-                Mock.Of<HttpContext>(),
-                Mock.Of<RouteData>(),
-                Mock.Of<ActionDescriptor>(),
-                modelState
-            );
-            var actionExecutingContext = new ActionExecutingContext(
-                actionContext,
-                new List<IFilterMetadata>(),
-                new Dictionary<string, object>(),
-                Mock.Of<Controller>()
-            );
+        var actionContext = new ActionContext(
+            Mock.Of<HttpContext>(),
+            Mock.Of<RouteData>(),
+            Mock.Of<ActionDescriptor>(),
+            modelState
+        );
+        var actionExecutingContext = new ActionExecutingContext(
+            actionContext,
+            new List<IFilterMetadata>(),
+            new Dictionary<string, object?>(),
+            Mock.Of<Controller>()
+        );
 
-            // Act
-            var exception = Record.Exception(() => validationFilter.OnActionExecuting(actionExecutingContext));
+        // Act
+        var exception = Record.Exception(() => validationFilter.OnActionExecuting(actionExecutingContext));
 
-            // Assert
-            Assert.IsType<ArgumentException>(exception);
-            Assert.Equal("invalid", exception.Message);
-        }
+        // Assert
+        Assert.IsType<ArgumentException>(exception);
+        Assert.Equal("invalid", exception.Message);
     }
 }

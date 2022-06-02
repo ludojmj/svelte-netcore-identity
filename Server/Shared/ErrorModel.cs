@@ -1,7 +1,6 @@
-namespace Server.Shared
+namespace Server.Shared;
+
+public class ErrorModel
 {
-    public class ErrorModel
-    {
-        public string Error { get; set; }
-    }
+    public string Error { get; set; }
 }
