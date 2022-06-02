@@ -35,7 +35,7 @@ npm run dev
 - SQLite database powered by: <https://www.sqlite.org>
 - Server based on API mechanisms of: <https://reqres.in/api/whatever>
 - Svelte template client borrowed from: <https://github.com/sveltejs/template.git>
-- Identity service powered by: <https://demo.identityserver.io>
+- Identity service powered by: <https://demo.duendesoftware.com>
 - Identity client borrowed from: <https://github.com/dopry/svelte-oidc>
 - CSS borrowed from: <https://getbootstrap.com>
 - SVG borrowed from: <https://creativecommons.org>
