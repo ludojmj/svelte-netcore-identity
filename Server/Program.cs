@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging.ApplicationInsights;
 using Server.DbModels;
 using Server.Shared;
 using Server.Services.Interfaces;
@@ -20,9 +19,7 @@ builder.Services.AddMemoryCache();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddLogging(builder =>
 {
-    builder.AddApplicationInsights(_conf["APPINSIGHTS_INSTRUMENTATIONKEY"]);
-    builder.AddFilter<ApplicationInsightsLoggerProvider>("", LogLevel.Trace);
-    builder.AddFilter<ApplicationInsightsLoggerProvider>("Microsoft", LogLevel.Error);
+    builder.AddConfiguration(_conf.GetSection("Logging"));
 });
 builder.Services.AddApplicationInsightsTelemetry();
 
@@ -80,17 +77,17 @@ builder.Services.AddSwaggerGen(c =>
     });
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = JwtBearerDefaults.AuthenticationScheme
-                            }
-                        },
-                        new string[] {}
-                    }
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = JwtBearerDefaults.AuthenticationScheme
+                }
+            },
+            new string[] {}
+        }
     });
 });
 

@@ -10,11 +10,11 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <PackageReference Include="IdentityModel" Version="6.0.0" />
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.20.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.5" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.8" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
 </Project>
