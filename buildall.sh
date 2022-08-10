@@ -28,4 +28,4 @@ dotnet build ../Server --configuration Release
 cd ..
 printf "\nDone.\n\n"
 # cd Server
-# dotnet bin/Release/net5.0/Server.dll
+# dotnet bin/Release/net6.0/Server.dll
