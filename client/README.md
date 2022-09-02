@@ -130,7 +130,7 @@ VITE_REDIRECT_URI="hhttps://localhost:5001"
 VITE_API_URL="https://localhost:5001/api/stuff"
 ```
 
-#### ...And in Production (client and API will be hosted together)...
+#### ...And in Production (client and API will be hosted together).
 
 File to edit:
 
