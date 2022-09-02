@@ -1,5 +1,5 @@
 <script>
-  // App.svelte
+  import "./variables.scss";
   import { Router, Route } from "svelte-navigator";
   import {
     OidcContext,
@@ -10,24 +10,20 @@
     isLoading,
     userInfo,
   } from "./oidc/components.module"; // "@dopry/svelte-oidc";
-  import Header from "./components/Header.svelte";
-  import CrudManager from "./components/CrudManager.svelte";
-  import StuffCreate from "./components/StuffCreate.svelte";
-  import StuffRead from "./components/StuffRead.svelte";
-  import StuffUpdate from "./components/StuffUpdate.svelte";
-  import StuffDelete from "./components/StuffDelete.svelte";
-  import Error from "./components/Error.svelte";
+  import Header from "./lib/Header.svelte";
+  import CrudManager from "./lib/CrudManager.svelte";
+  import StuffCreate from "./lib/StuffCreate.svelte";
+  import StuffRead from "./lib/StuffRead.svelte";
+  import StuffUpdate from "./lib/StuffUpdate.svelte";
+  import StuffDelete from "./lib/StuffDelete.svelte";
+  import Error from "./lib/Error.svelte";
 
   let oidcConf = {
     issuer: "https://demo.duendesoftware.com",
     client_id: "interactive.public",
-    redirect_uri: "http://localhost:3000",
-    post_logout_redirect_uri: "http://localhost:3000/",
+    redirect_uri: import.meta.env.VITE_REDIRECT_URI,
+    post_logout_redirect_uri: import.meta.env.VITE_REDIRECT_URI
   };
-  if (isProd) {
-    oidcConf.redirect_uri = "https://localhost:5001";
-    oidcConf.post_logout_redirect_uri = "https://localhost:5001/";
-  }
   const displayOidcConf = false;
 </script>
 
@@ -111,40 +107,3 @@
     </OidcContext>
   </div>
 </main>
-
-<style global lang="scss">
-  table {
-    table-layout: fixed;
-  }
-
-  td {
-    white-space: normal !important;
-    word-wrap: break-word;
-    overflow: hidden;
-  }
-
-  textarea {
-    overflow: hidden;
-    resize: none;
-  }
-
-  @media screen and (max-width: 576px) {
-    .table thead {
-      display: none;
-      border: none;
-    }
-    .table tr {
-      display: block;
-    }
-    .table td {
-      display: block;
-      text-align: right;
-      border: none;
-    }
-    .table td:before {
-      content: attr(data-label);
-      float: left !important;
-      font-weight: bold;
-    }
-  }
-</style>
