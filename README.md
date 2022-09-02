@@ -97,8 +97,7 @@ dotnet run
 
 ```bash
 cd <myfolder>
-git clone https://github.com/sveltejs/template.git
-mv template myApp
+npm create vite@latest client -- --template svelte
 ```
 
 #### Run the client App
@@ -109,15 +108,38 @@ npm install
 npm run dev
 ```
 
-#### Possibly run a standalone version of the client App (mocking) except identity server
+#### In development, you can either run a standalone version of the client App (mocking)...
 
-At the second line of the file:
+File to edit:
 
- > ```<myfolder>/client/src/api/stuff.js```
+ > ```<myfolder>/client/.env.development```
 
-Swap isProd to !isProd:
+```bash
+VITE_REDIRECT_URI="http://localhost:5173"
+VITE_API_URL="http://localhost:5173/mock/stuff"
+```
 
- > const rootApi = !isProd ? "https://localhost:5001/api/stuff" : "http://localhost:3000/mock/stuff";
+#### ...Or call the .NET API hosted locally with the client App...
+
+File to edit:
+
+ > ```<myfolder>/client/.env.development```
+
+```bash
+VITE_REDIRECT_URI="hhttps://localhost:5001"
+VITE_API_URL="https://localhost:5001/api/stuff"
+```
+
+#### ...And in Production (client and API will be hosted together)...
+
+File to edit:
+
+ > ```<myfolder>/client/.env.production```
+
+```bash
+VITE_REDIRECT_URI="<your server URI>"
+VITE_API_URL="<your server URI>/api/stuff"
+```
 
 ---
 
@@ -140,7 +162,7 @@ Swap isProd to !isProd:
 **When?**
 
 - Running the Svelte client App (```npm run dev```);
-- Connecting to: <http://localhost:3000/>.
+- Connecting to: <http://localhost:5173/>.
 
 **How to solve:**
 
@@ -151,11 +173,11 @@ Swap isProd to !isProd:
 **When?**
 
 - Running the Svelte client App (```npm run dev```);
-- Connecting to: <http://localhost:3000/>.
+- Connecting to: <http://localhost:5173/>.
 
 **How to solve:**
 
-- ==> Start the .NET Core server (```dotnet run```) before the Svelte client App (```npm run dev```).
+- ==> Start the .NET server (```dotnet run```) before the Svelte client App (```npm run dev```).
 
 ### _Your connection is not private_ (NET::ERR_CERT_AUTHORITY_INVALID)
 
