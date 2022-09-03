@@ -1,7 +1,7 @@
 // stuffList.js
 import axios from "axios";
 
-const rootApi = isProd ? "https://localhost:5001/api/stuff" : "http://localhost:3000/mock/stuff";
+const rootApi = import.meta.env.VITE_API_URL;
 const isMock = rootApi.indexOf("mock") > -1;
 const axiosCall = async (params) => {
   try {

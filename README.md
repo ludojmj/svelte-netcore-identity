@@ -34,7 +34,7 @@ npm run dev
 
 - SQLite database powered by: <https://www.sqlite.org>
 - Server based on API mechanisms of: <https://reqres.in/api/whatever>
-- Svelte template client borrowed from: <https://github.com/sveltejs/template.git>
+- Svelte template client borrowed from: <https://svelte.dev>
 - Identity service powered by: <https://demo.duendesoftware.com>
 - Identity client borrowed from: <https://github.com/dopry/svelte-oidc>
 - CSS borrowed from: <https://getbootstrap.com>
@@ -97,8 +97,7 @@ dotnet run
 
 ```bash
 cd <myfolder>
-git clone https://github.com/sveltejs/template.git
-mv template myApp
+npm create vite@latest client -- --template svelte
 ```
 
 #### Run the client App
@@ -109,15 +108,47 @@ npm install
 npm run dev
 ```
 
-#### Possibly run a standalone version of the client App (mocking) except identity server
+#### Client App settings
 
-At the second line of the file:
+##### Development mode (```<myfolder>/client/.env.development```)
 
- > ```<myfolder>/client/src/api/stuff.js```
+- Client consuming an embedded mocked API (http port 5173)
 
-Swap isProd to !isProd:
+```bash
+VITE_REDIRECT_URI="http://localhost:5173"
+VITE_API_URL="http://localhost:5173/mock/stuff"
+```
 
- > const rootApi = !isProd ? "https://localhost:5001/api/stuff" : "http://localhost:3000/mock/stuff";
+- Client (http port 5173) consuming a distant API (https port 5001)
+
+```bash
+VITE_REDIRECT_URI="http://localhost:5173"
+VITE_API_URL="https://localhost:5001/api/stuff"
+```
+
+- Client (https port 5001) and Server (https port 5001) together in the same Web app
+
+==> Files inside "<myfolder>/client/dist" directory must be copied into "<myfolder>/Server/wwwroot" directory
+
+==> See: buildall.sh
+
+```bash
+VITE_REDIRECT_URI="https://localhost:5001"
+VITE_API_URL="https://localhost:5001/api/stuff"
+```
+
+##### Production mode (```<myfolder>/client/.env.production```)
+
+- Client and Server together in the same Web app hosted on a real domain
+
+```bash
+VITE_REDIRECT_URI="https://www.example.com/"
+VITE_API_URL="https://www.example.com/api/stuff"
+```
+
+==> Files inside "<myfolder>/client/dist" directory must be copied into "<myfolder>/Server/wwwroot" directory
+
+==> See: buildall.sh
 
 ---
 
@@ -140,7 +171,7 @@ Swap isProd to !isProd:
 **When?**
 
 - Running the Svelte client App (```npm run dev```);
-- Connecting to: <http://localhost:3000/>.
+- Connecting to: <http://localhost:5173/>.
 
 **How to solve:**
 
@@ -151,11 +182,11 @@ Swap isProd to !isProd:
 **When?**
 
 - Running the Svelte client App (```npm run dev```);
-- Connecting to: <http://localhost:3000/>.
+- Connecting to: <http://localhost:5173/>.
 
 **How to solve:**
 
-- ==> Start the .NET Core server (```dotnet run```) before the Svelte client App (```npm run dev```).
+- ==> Start the .NET server (```dotnet run```) before the Svelte client App (```npm run dev```).
 
 ### _Your connection is not private_ (NET::ERR_CERT_AUTHORITY_INVALID)
 
