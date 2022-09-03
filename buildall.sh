@@ -8,14 +8,14 @@ let "step++"
 printf "\n************************** $step/$STEPS : Building client...\n"
 cd client
 npm install
-rm -rfv public/build
+rm -rfv dist
 npm run build
 
 let "step++"
 printf "\n************************** $step/$STEPS : Copying client build to wwwroot server folder...\n"
 rm -rfv ../Server/wwwroot/*
 printf "\n"
-cp -rfv public/. ../Server/wwwroot
+cp -rfv dist/. ../Server/wwwroot
 
 let "step++"
 printf "\n************************** $step/$STEPS : Testing server...\n"
@@ -25,6 +25,8 @@ let "step++"
 printf "\n************************** $step/$STEPS : Building server...\n"
 dotnet build ../Server --configuration Release
 
+let "step++"
+printf "\n************************** $step/$STEPS : Finalizing...\n"
 cd ..
 printf "\nDone.\n\n"
 # cd Server

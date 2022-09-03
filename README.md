@@ -34,7 +34,7 @@ npm run dev
 
 - SQLite database powered by: <https://www.sqlite.org>
 - Server based on API mechanisms of: <https://reqres.in/api/whatever>
-- Svelte template client borrowed from: <https://github.com/sveltejs/template.git>
+- Svelte template client borrowed from: <https://svelte.dev>
 - Identity service powered by: <https://demo.duendesoftware.com>
 - Identity client borrowed from: <https://github.com/dopry/svelte-oidc>
 - CSS borrowed from: <https://getbootstrap.com>
@@ -108,38 +108,47 @@ npm install
 npm run dev
 ```
 
-#### In development, you can either run a standalone version of the client App (mocking)...
+#### Client App settings
 
-File to edit:
+##### Development mode (```<myfolder>/client/.env.development```)
 
- > ```<myfolder>/client/.env.development```
+- Client consuming an embedded mocked API (http port 5173)
 
 ```bash
 VITE_REDIRECT_URI="http://localhost:5173"
 VITE_API_URL="http://localhost:5173/mock/stuff"
 ```
 
-#### ...Or call the .NET API hosted locally with the client App...
-
-File to edit:
-
- > ```<myfolder>/client/.env.development```
+- Client (http port 5173) consuming a distant API (https port 5001)
 
 ```bash
-VITE_REDIRECT_URI="hhttps://localhost:5001"
+VITE_REDIRECT_URI="http://localhost:5173"
 VITE_API_URL="https://localhost:5001/api/stuff"
 ```
 
-#### ...And in Production (client and API will be hosted together).
+- Client (https port 5001) and Server (https port 5001) together in the same Web app
 
-File to edit:
+==> Files inside "<myfolder>/client/dist" directory must be copied into "<myfolder>/Server/wwwroot" directory
 
- > ```<myfolder>/client/.env.production```
+==> See: buildall.sh
 
 ```bash
-VITE_REDIRECT_URI="<your server URI>"
-VITE_API_URL="<your server URI>/api/stuff"
+VITE_REDIRECT_URI="https://localhost:5001"
+VITE_API_URL="https://localhost:5001/api/stuff"
 ```
+
+##### Production mode (```<myfolder>/client/.env.production```)
+
+- Client and Server together in the same Web app hosted on a real domain
+
+```bash
+VITE_REDIRECT_URI="https://www.example.com/"
+VITE_API_URL="https://www.example.com/api/stuff"
+```
+
+==> Files inside "<myfolder>/client/dist" directory must be copied into "<myfolder>/Server/wwwroot" directory
+
+==> See: buildall.sh
 
 ---
 

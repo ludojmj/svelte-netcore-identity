@@ -2,7 +2,6 @@
 import axios from "axios";
 
 const rootApi = import.meta.env.VITE_API_URL;
-console.log(import.meta.env, import.meta.env.development)
 const isMock = rootApi.indexOf("mock") > -1;
 const axiosCall = async (params) => {
   try {
