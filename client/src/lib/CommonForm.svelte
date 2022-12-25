@@ -42,7 +42,6 @@
   {#if stuffDatum.id}
     <form
       on:submit|preventDefault={handleSubmit}
-      on:keypress={handleEnter}
       class="alert alert-secondary"
     >
       <header
@@ -81,6 +80,7 @@
         placeholder={readonly ? "" : "Label"}
         value={stuffDatum.label}
         on:change={handleChange}
+        on:keypress={handleEnter}
         {readonly}
         use:init
       />
@@ -95,6 +95,7 @@
         placeholder={readonly ? "" : "Description"}
         value={stuffDatum.description}
         on:change={handleChange}
+        on:keypress={handleEnter}
         {readonly}
       />
 
