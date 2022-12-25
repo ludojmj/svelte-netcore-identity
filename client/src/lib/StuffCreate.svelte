@@ -19,10 +19,6 @@
     stuffDatum = initialDatum;
   });
 
-  const handleCancel = () => {
-    navigate("/");
-  };
-
   const handleChange = (event) => {
     const { name, value } = event.target;
     stuffDatum = { ...stuffDatum, [name]: value };
@@ -62,7 +58,6 @@
     {inputError}
     readonly={false}
     {handleChange}
-    {handleCancel}
     {handleSubmit}
   />
 </main>

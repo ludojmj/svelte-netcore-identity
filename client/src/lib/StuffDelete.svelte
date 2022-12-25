@@ -12,10 +12,6 @@
     stuffDatum = await apiGetStuffById(id, $accessToken, $idToken);
   });
 
-  const handleCancel = () => {
-    navigate("/");
-  };
-
   const navigate = useNavigate();
   const handleSubmit = async (event) => {
     const formData = new FormData(event.target);
@@ -39,7 +35,6 @@
     inputError={null}
     readonly={true}
     handleChange={null}
-    {handleCancel}
     {handleSubmit}
   />
 </main>

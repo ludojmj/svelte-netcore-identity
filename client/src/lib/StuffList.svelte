@@ -36,7 +36,7 @@
     <tbody>
       {#each stuff.datumList as stuffDatum}
         <tr
-          key={stuffDatum.id}
+          id={stuffDatum.id}
           class={stuffDatum.user.id === $userInfo.sub
             ? "table-success"
             : "table-danger"}

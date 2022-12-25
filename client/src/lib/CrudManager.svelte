@@ -22,7 +22,10 @@
   const handleSearch = async () => {
     if (search.filter.length) {
       stuff = await apiSearchStuff(search.filter, $accessToken, $idToken);
+      return;
     }
+
+    handleReset();
   };
 
   const handlePage = async (event) => {
@@ -75,6 +78,9 @@
               </div>
             </td>
             <td>
+              <button class="btn btn-info" on:click={handleReset}>Reset</button>
+            </td>
+            <td>
               <ul class="pagination justify-content-end">
                 <li class="page-item">
                   <button
@@ -102,9 +108,6 @@
                   </button>
                 </li>
               </ul>
-            </td>
-            <td>
-              <button class="btn btn-info" on:click={handleReset}>Reset</button>
             </td>
             <td>
               <button class="btn btn-success" on:click={handleCreate}>

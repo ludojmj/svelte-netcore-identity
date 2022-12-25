@@ -23,7 +23,6 @@
       inputError={null}
       readonly={true}
       handleChange={null}
-      {handleCancel}
       handleSubmit={handleCancel}
     />
   {/if}

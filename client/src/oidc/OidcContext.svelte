@@ -1,6 +1,5 @@
 <script context="module">
   import { writable } from "svelte/store";
-  import { getContext } from "svelte";
   import oidcClient from "oidc-client";
   import { onMount, onDestroy, setContext } from "svelte";
 
@@ -11,7 +10,7 @@
   export const isAuthenticated = writable(false);
   export const accessToken = writable("");
   export const idToken = writable("");
-  export const userInfo = writable({});
+  export const userInfo = writable({sub: ""});
   export const authError = writable(null);
 
   /**

@@ -1,5 +1,6 @@
 <script>
   // CommonForm.svelte
+  import { navigate } from "svelte-navigator";
   import Error from "./Error.svelte";
   import Loading from "./Loading.svelte";
   export let title,
@@ -7,19 +8,21 @@
     inputError,
     readonly,
     handleChange,
-    handleCancel,
     handleSubmit;
 
-  const handleKeyDown = (event) => {
-    if (event.keyCode === 13) {
-      // ENTER
-      return;
-    }
+  const init = (el) => {
+    el.focus();
+  };
 
-    // ESCAPE
-    if (event.keyCode === 27) {
-      handleCancel();
+  const handleEnter = (event) => {
+    if (event.code == "Enter" || event.code == "NumpadEnter") {
+      event.preventDefault();
+      return false;
     }
+  };
+
+  const handleCancel = () => {
+    navigate("/");
   };
 </script>
 
@@ -39,13 +42,9 @@
   {#if stuffDatum.id}
     <form
       on:submit|preventDefault={handleSubmit}
-      on:keydown={handleKeyDown}
+      on:keypress={handleEnter}
       class="alert alert-secondary"
-      value={stuffDatum}
     >
-      <!-- Prevent implicit submission of the form -->
-      <button class="d-none" type="submit" disabled aria-hidden="true" />
-
       <header
         class="modal-header alert {title.indexOf('Creating') > -1
           ? 'alert-success'
@@ -83,6 +82,7 @@
         value={stuffDatum.label}
         on:change={handleChange}
         {readonly}
+        use:init
       />
 
       <label class="form-label" for="description">Description:</label>
