@@ -86,7 +86,7 @@
                   <button
                     class="btn btn-primary"
                     value="-"
-                    on:click={handlePage}
+                    on:click|preventDefault={handlePage}
                     disabled={stuff.page === 1}
                   >
                     &laquo;
@@ -101,7 +101,7 @@
                   <button
                     class="btn btn-primary"
                     value="+"
-                    on:click={handlePage}
+                    on:click|preventDefault={handlePage}
                     disabled={stuff.page === stuff.totalPages}
                   >
                     &raquo;
