@@ -108,7 +108,7 @@
   export let post_logout_redirect_uri;
   export let extraOptions = {};
 
-  export let scope = "openid profile email api";
+  export let scope = "openid profile api offline_access";
 
   setContext(OIDC_CONTEXT_REDIRECT_URI, redirect_uri);
   setContext(OIDC_CONTEXT_POST_LOGOUT_REDIRECT_URI, post_logout_redirect_uri);

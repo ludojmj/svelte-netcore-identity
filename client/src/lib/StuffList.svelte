@@ -1,22 +1,23 @@
 <script>
   // StuffList.svelte
-  import { useNavigate } from "svelte-navigator";
+  import { navigate } from "svelte-navigator";
   import { userInfo } from "../oidc/components.module"; // "@dopry/svelte-oidc";
   import { selectedItem } from "../store.js";
   export let stuff;
 
-  const navigate = useNavigate();
   const handleRead = (stuffDatum) => {
     selectedItem.update(() => stuffDatum);
     navigate("/read/" + stuffDatum.id);
   };
 
-  const handleUpdate = (event) => {
-    navigate("/update/" + event.currentTarget.value);
+  const handleUpdate = (stuffDatum) => {
+    selectedItem.update(() => stuffDatum);
+    navigate("/update/" + stuffDatum.id);
   };
 
-  const handleDelete = (event) => {
-    navigate("/delete/" + event.currentTarget.value);
+  const handleDelete = (stuffDatum) => {
+    selectedItem.update(() => stuffDatum);
+    navigate("/delete/" + stuffDatum.id);
   };
 </script>
 
@@ -25,7 +26,6 @@
     <caption>.List of stuff</caption>
     <thead>
       <tr>
-        <!-- <th scope="col">id</th> -->
         <th scope="col">Label</th>
         <th scope="col">Description</th>
         <th scope="col">CreatedAt</th>
@@ -41,7 +41,6 @@
             ? "table-success"
             : "table-danger"}
         >
-          <!-- <td data-label="id">{stuffDatum.user.id}</td> -->
           <td data-label="Label">{stuffDatum.label}</td>
           <td data-label="Description">{stuffDatum.description}</td>
           <td data-label="createdAt">
@@ -74,15 +73,13 @@
             <td>
               <button
                 class="btn btn-warning"
-                value={stuffDatum.id}
-                on:click={handleUpdate}>Update</button
+                on:click={() => handleUpdate(stuffDatum)}>Update</button
               >
             </td>
             <td>
               <button
                 class="btn btn-danger"
-                value={stuffDatum.id}
-                on:click={handleDelete}>Delete</button
+                on:click={() => handleDelete(stuffDatum)}>Delete</button
               >
             </td>
           {:else}
