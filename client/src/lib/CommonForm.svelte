@@ -74,8 +74,6 @@
         class="form-control"
         type="text"
         maxLength="79"
-        name="label"
-        id="label"
         placeholder="Label"
         {readonly}
       />
@@ -87,8 +85,6 @@
         class="form-control"
         type="text"
         maxLength="79"
-        name="description"
-        id="description"
         placeholder="Description"
         {readonly}
       />
@@ -100,8 +96,6 @@
         class="form-control"
         rows="5"
         maxLength="399"
-        name="otherInfo"
-        id="otherInfo"
         placeholder="Other info"
         {readonly}
       />
