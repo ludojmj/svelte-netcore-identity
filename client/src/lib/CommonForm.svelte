@@ -3,12 +3,7 @@
   import { Link, navigate } from "svelte-navigator";
   import Error from "./Error.svelte";
   import Loading from "./Loading.svelte";
-  export let title,
-    stuffDatum,
-    inputError,
-    readonly,
-    handleChange,
-    handleSubmit;
+  export let title, stuffDatum, inputError, disabled, handleSubmit;
 
   const init = (el) => {
     el.focus();
@@ -57,47 +52,44 @@
 
       <label class="form-label" for="user">Owner:</label>
       <input
-        class="form-control"
+        class="form-control fw-bold"
         type="text"
         id="user"
+        name="user"
         value={stuffDatum.user ? stuffDatum.user.givenName : "Current user"}
         aria-label="User"
-        disabled={true}
-        {readonly}
+        disabled
       />
 
       <label class="form-label" for="label">Label:</label>
       <input
         bind:value={stuffDatum.label}
-        on:change={handleChange}
         use:init
         class="form-control"
         type="text"
         maxLength="79"
         placeholder="Label"
-        {readonly}
+        {disabled}
       />
 
       <label class="form-label" for="description">Description:</label>
       <input
         bind:value={stuffDatum.description}
-        on:change={handleChange}
         class="form-control"
         type="text"
         maxLength="79"
         placeholder="Description"
-        {readonly}
+        {disabled}
       />
 
       <label class="form-label" for="otherInfo">Other info:</label>
       <textarea
         bind:value={stuffDatum.otherInfo}
-        on:change={handleChange}
         class="form-control"
         rows="5"
         maxLength="399"
         placeholder="Other info"
-        {readonly}
+        {disabled}
       />
 
       <footer>

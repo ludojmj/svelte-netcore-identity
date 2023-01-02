@@ -21,8 +21,7 @@
     title="Reading a stuff"
     {stuffDatum}
     inputError={null}
-    readonly={true}
-    handleChange={null}
+    disabled={true}
     handleSubmit={handleCancel}
   />
 {/if}

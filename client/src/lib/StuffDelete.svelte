@@ -25,8 +25,7 @@
     title="Deleting a stuff"
     {stuffDatum}
     inputError={null}
-    readonly={true}
-    handleChange={null}
+    disabled={true}
     {handleSubmit}
   />
 {/if}

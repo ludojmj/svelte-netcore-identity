@@ -34,11 +34,6 @@
       event.currentTarget.value === "+" ? stuff.page + 1 : stuff.page - 1;
     stuff = await apiGotoPage(page, $accessToken, $idToken);
   };
-
-  const handleChangeFilter = (event) => {
-    const { name, value } = event.target;
-    search = { ...search, [name]: value };
-  };
 </script>
 
 <main>
@@ -55,6 +50,7 @@
           <td>
             <div class="input-group">
               <input
+                bind:value={search.filter}
                 class="form-control"
                 id="filter"
                 name="filter"
@@ -62,8 +58,6 @@
                 placeholder="Filter"
                 aria-label="Filter"
                 maxLength="20"
-                bind:value={search.filter}
-                on:change={handleChangeFilter}
               />
               <button class="btn btn-primary" type="submit"> Search </button>
             </div>

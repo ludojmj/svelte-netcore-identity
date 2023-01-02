@@ -19,12 +19,6 @@
     }
   });
 
-  const handleChange = (event) => {
-    inputError = "";
-    const { name, value } = event.target;
-    stuffDatum = { ...stuffDatum, [name]: value };
-  };
-
   const handleSubmit = async () => {
     let hasChanged = false;
     for (let key in stuffDatum) {
@@ -65,8 +59,7 @@
     title="Updating a stuff"
     {stuffDatum}
     {inputError}
-    readonly={false}
-    {handleChange}
+    disabled={false}
     {handleSubmit}
   />
 {/if}

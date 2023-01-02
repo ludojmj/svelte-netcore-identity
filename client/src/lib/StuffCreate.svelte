@@ -13,12 +13,6 @@
     otherInfo: "",
   };
 
-  const handleChange = (event) => {
-    inputError = "";
-    const { name, value } = event.target;
-    stuffDatum = { ...stuffDatum, [name]: value };
-  };
-
   const handleSubmit = async (event) => {
     if (!/\S/.test(stuffDatum.label)) {
       inputError = "The label cannot be empty.";
@@ -41,8 +35,7 @@
     title="Creating a stuff"
     {stuffDatum}
     {inputError}
-    readonly={false}
-    {handleChange}
+    disabled={false}
     {handleSubmit}
   />
 </main>
