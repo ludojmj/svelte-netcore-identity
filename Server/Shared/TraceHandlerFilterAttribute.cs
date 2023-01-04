@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Server.Shared;
 
-[System.AttributeUsage(System.AttributeTargets.Class, AllowMultiple = true)]
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 public sealed class TraceHandlerFilterAttribute : ActionFilterAttribute
 {
     private readonly ILogger _logger;

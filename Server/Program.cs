@@ -8,8 +8,8 @@ using Server.Services.Interfaces;
 using Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-ConfigurationManager _conf = builder.Configuration;
-IWebHostEnvironment _env = builder.Environment;
+ConfigurationManager conf = builder.Configuration;
+IWebHostEnvironment env = builder.Environment;
 
 // Add services to the container.
 builder.Services.AddHealthChecks();
@@ -17,24 +17,24 @@ builder.Services.AddControllers();
 builder.Services.AddCors();
 builder.Services.AddMemoryCache();
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddLogging(builder =>
+builder.Services.AddLogging(loggingBuilder =>
 {
-    builder.AddConfiguration(_conf.GetSection("Logging"));
+    loggingBuilder.AddConfiguration(conf.GetSection("Logging"));
 });
 builder.Services.AddApplicationInsightsTelemetry();
 
 // Add DB
 builder.Services.AddDbContext<StuffDbContext>(options => options.UseSqlite(
-    _conf.GetConnectionString("SqlConnectionString"),
-    sqlServerOptions => sqlServerOptions.CommandTimeout(_conf.GetSection("ConnectionStrings:SqlCommandTimeout").Get<int>()))
+    conf.GetConnectionString("SqlConnectionString"),
+    sqlServerOptions => sqlServerOptions.CommandTimeout(conf.GetSection("ConnectionStrings:SqlCommandTimeout").Get<int>()))
 );
 
 // Add Authent
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.Authority = _conf["JwtToken:Authority"];
-        options.Audience = _conf["JwtToken:Audience"];
+        options.Authority = conf["JwtToken:Authority"];
+        options.Audience = conf["JwtToken:Audience"];
     });
 
 builder.Services.AddMvc(options =>
@@ -59,7 +59,7 @@ builder.Services.AddHsts(configureOptions =>
 builder.Services.AddHttpsRedirection(options =>
 {
     options.RedirectStatusCode = StatusCodes.Status308PermanentRedirect;
-    options.HttpsPort = _conf.GetSection("https_port").Get<int>();
+    options.HttpsPort = conf.GetSection("https_port").Get<int>();
 });
 
 // Register the Swagger generator
@@ -109,13 +109,13 @@ app.UseFileServer(new FileServerOptions
     EnableDefaultFiles = true,
     DefaultFilesOptions = { DefaultFileNames = { "index.html" } }
 });
-if (!_env.IsProduction())
+if (!env.IsProduction())
 {
     app.UseSwagger(c =>
     {
         c.PreSerializeFilters.Add((swagger, httpReq) =>
         {
-            swagger.Servers = new List<OpenApiServer> { new OpenApiServer { Url = $"{httpReq.Scheme}://{httpReq.Host.Value}" } };
+            swagger.Servers = new List<OpenApiServer> { new() { Url = $"{httpReq.Scheme}://{httpReq.Host.Value}" } };
         });
     });
     app.UseSwaggerUI(c =>
@@ -127,14 +127,14 @@ if (!_env.IsProduction())
 }
 
 app.UseRouting();
-if (_env.IsDevelopment())
+if (env.IsDevelopment())
 {
     app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 }
 else
 {
-    var corsList = _conf.GetSection("AuthCors").Get<string[]>();
-    app.UseCors(builder => builder
+    var corsList = conf.GetSection("AuthCors").Get<string[]>();
+    app.UseCors(corsPolicyBuilder => corsPolicyBuilder
         .WithOrigins(corsList)
         .AllowAnyMethod()
         .AllowAnyHeader()
