@@ -5,6 +5,7 @@
     OIDC_CONTEXT_POST_LOGOUT_REDIRECT_URI,
     logout,
   } from "./OidcContext.svelte";
+
   const oidcPromise = getContext(OIDC_CONTEXT_CLIENT_PROMISE);
   export let logout_url = getContext(OIDC_CONTEXT_POST_LOGOUT_REDIRECT_URI);
 </script>

@@ -10,7 +10,7 @@
   export const isAuthenticated = writable(false);
   export const accessToken = writable("");
   export const idToken = writable("");
-  export const userInfo = writable({sub: ""});
+  export const userInfo = writable({});
   export const authError = writable(null);
 
   /**

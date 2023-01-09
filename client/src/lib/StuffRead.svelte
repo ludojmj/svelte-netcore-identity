@@ -11,7 +11,6 @@
   const handleCancel = () => {
     navigate("/");
   };
-  console.log(stuffDatum);
 </script>
 
 {#if id !== $selectedItem.id}

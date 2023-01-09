@@ -4,6 +4,7 @@
     OIDC_CONTEXT_CLIENT_PROMISE,
     refreshToken,
   } from "./OidcContext.svelte";
+
   const oidcPromise = getContext(OIDC_CONTEXT_CLIENT_PROMISE);
 </script>
 
