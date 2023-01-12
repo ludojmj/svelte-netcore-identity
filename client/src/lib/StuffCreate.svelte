@@ -2,7 +2,6 @@
   // StuffCreate.svelte
   import { navigate } from "svelte-navigator";
   import { apiCreateStuff } from "../api/stuff";
-  import { accessToken, idToken } from "../oidc/components.module"; // "@dopry/svelte-oidc";
   import CommonForm from "./CommonForm.svelte";
 
   let inputError = "";
@@ -13,7 +12,7 @@
     otherInfo: "",
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async () => {
     if (!/\S/.test(stuffDatum.label)) {
       inputError = "The label cannot be empty.";
       setTimeout(() => {
@@ -23,7 +22,7 @@
       return;
     }
 
-    stuffDatum = await apiCreateStuff(stuffDatum, $accessToken, $idToken);
+    stuffDatum = await apiCreateStuff(stuffDatum);
     if (!stuffDatum.error) {
       navigate("/");
     }

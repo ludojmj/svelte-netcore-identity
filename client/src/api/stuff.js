@@ -22,63 +22,57 @@ export const apiGetStuffList = async (accessToken, idToken) => {
   return axiosCall(getMsg);
 };
 
-export const apiSearchStuff = async (search, accessToken, idToken) => {
+export const apiSearchStuff = async (search) => {
   const mock = isMock ? ".json" : "";
   const getMsg = {
     method: "get",
-    headers: { "authorization": `Bearer ${accessToken}`, "id_token": idToken },
     url: `${rootApi}${mock}?search=${search}`
   };
   return axiosCall(getMsg);
 };
 
-export const apiGotoPage = async (page, accessToken, idToken) => {
+export const apiGotoPage = async (page) => {
   const mock = isMock ? ".json" : "";
   const getMsg = {
     method: "get",
-    headers: { "authorization": `Bearer ${accessToken}`, "id_token": idToken },
     url: `${rootApi}${mock}?page=${page}`
   };
   return axiosCall(getMsg);
 };
 
-export const apiGetStuffById = async (id, accessToken, idToken) => {
+export const apiGetStuffById = async (id) => {
   const mock = isMock ? ".json" : "";
   const getMsg = {
     method: "get",
-    headers: { "authorization": `Bearer ${accessToken}`, "id_token": idToken },
     url: `${rootApi}/${id}${mock}`
   };
   return axiosCall(getMsg);
 };
 
-export const apiCreateStuff = async (input, accessToken, idToken) => {
+export const apiCreateStuff = async (input) => {
   const mock = isMock ? ".json" : "";
   const postMsg = {
     method: isMock ? "get" : "post",
-    headers: { "authorization": `Bearer ${accessToken}`, "id_token": idToken },
     url: rootApi + mock,
     data: input
   };
   return axiosCall(postMsg);
 };
 
-export const apiUpdateStuff = async (id, input, accessToken, idToken) => {
+export const apiUpdateStuff = async (id, input) => {
   const mock = isMock ? ".json" : "";
   const putMsg = {
     method: isMock ? "get" : "put",
-    headers: { "authorization": `Bearer ${accessToken}`, "id_token": idToken },
     url: `${rootApi}/${id}${mock}`,
     data: input
   };
   return axiosCall(putMsg);
 };
 
-export const apiDeleteStuff = async (id, accessToken, idToken) => {
+export const apiDeleteStuff = async (id) => {
   const mock = isMock ? ".json" : "";
   const deleteMsg = {
     method: isMock ? "get" : "delete",
-    headers: { "authorization": `Bearer ${accessToken}`, "id_token": idToken },
     url: `${rootApi}/${id}${mock}`
   };
   return axiosCall(deleteMsg);

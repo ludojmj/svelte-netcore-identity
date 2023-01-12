@@ -4,7 +4,6 @@
   import { navigate } from "svelte-navigator";
   import { selectedItem } from "../store.js";
   import { apiUpdateStuff } from "../api/stuff";
-  import { accessToken, idToken } from "../oidc/components.module"; // "@dopry/svelte-oidc";
   import CommonForm from "./CommonForm.svelte";
   import Error from "./Error.svelte";
   export let id;
@@ -45,7 +44,7 @@
       return;
     }
 
-    stuffDatum = await apiUpdateStuff(id, stuffDatum, $accessToken, $idToken);
+    stuffDatum = await apiUpdateStuff(id, stuffDatum);
     if (!stuffDatum.error) {
       navigate("/");
     }

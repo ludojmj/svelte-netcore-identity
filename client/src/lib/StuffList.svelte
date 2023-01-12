@@ -1,8 +1,9 @@
 <script>
   // StuffList.svelte
+  import { VanillaOidc } from "@axa-fr/vanilla-oidc";
   import { navigate } from "svelte-navigator";
-  import { userInfo } from "../oidc/components.module"; // "@dopry/svelte-oidc";
-  import { selectedItem } from "../store.js";
+  import { selectedItem, tokens } from "../store.js";
+  import { configuration } from "../oidcConf.js";
   export let stuff;
 
   const handleRead = (stuffDatum) => {
@@ -19,6 +20,8 @@
     selectedItem.update(() => stuffDatum);
     navigate("/delete/" + stuffDatum.id);
   };
+
+  const vanillaOidc = VanillaOidc.getOrCreate(configuration);
 </script>
 
 <main>
@@ -37,7 +40,7 @@
       {#each stuff.datumList as stuffDatum}
         <tr
           id={stuffDatum.id}
-          class={stuffDatum.user.id === $userInfo.sub
+          class={stuffDatum.user.id === $tokens.idTokenPayload.sub
             ? "table-success"
             : "table-danger"}
         >
@@ -69,7 +72,7 @@
               Read
             </button>
           </td>
-          {#if stuffDatum.user.id === $userInfo.sub}
+          {#if stuffDatum.user.id === $tokens.idTokenPayload.sub}
             <td>
               <button
                 class="btn btn-warning"

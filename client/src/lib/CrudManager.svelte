@@ -2,7 +2,6 @@
   // CrudManager.svelte
   import { onMount } from "svelte";
   import { Link } from "svelte-navigator";
-  import { accessToken, idToken } from "../oidc/components.module"; // "@dopry/svelte-oidc";
   import { apiGetStuffList, apiSearchStuff, apiGotoPage } from "../api/stuff";
   import StuffList from "./StuffList.svelte";
   import Error from "./Error.svelte";
@@ -11,17 +10,17 @@
   let search = { filter: "" };
   let stuff = {};
   onMount(async () => {
-    stuff = await apiGetStuffList($accessToken, $idToken);
+    stuff = await apiGetStuffList();
   });
 
   const handleReset = async () => {
     search = { filter: "" };
-    stuff = await apiGetStuffList($accessToken, $idToken);
+    stuff = await apiGetStuffList();
   };
 
   const handleSearch = async () => {
     if (search.filter) {
-      stuff = await apiSearchStuff(search.filter, $accessToken, $idToken);
+      stuff = await apiSearchStuff(search.filter);
       return;
     }
 
@@ -32,7 +31,7 @@
     search = { filter: "" };
     const page =
       event.currentTarget.value === "+" ? stuff.page + 1 : stuff.page - 1;
-    stuff = await apiGotoPage(page, $accessToken, $idToken);
+    stuff = await apiGotoPage(page);
   };
 </script>
 

@@ -17,10 +17,7 @@ builder.Services.AddControllers();
 builder.Services.AddCors();
 builder.Services.AddMemoryCache();
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddLogging(loggingBuilder =>
-{
-    loggingBuilder.AddConfiguration(conf.GetSection("Logging"));
-});
+builder.Services.AddLogging(loggingBuilder => loggingBuilder.AddConfiguration(conf.GetSection("Logging")));
 builder.Services.AddApplicationInsightsTelemetry();
 
 // Add DB
@@ -86,7 +83,7 @@ builder.Services.AddSwaggerGen(c =>
                     Id = JwtBearerDefaults.AuthenticationScheme
                 }
             },
-            new string[] {}
+            Array.Empty<string>()
         }
     });
 });
@@ -112,12 +109,11 @@ app.UseFileServer(new FileServerOptions
 if (!env.IsProduction())
 {
     app.UseSwagger(c =>
-    {
         c.PreSerializeFilters.Add((swagger, httpReq) =>
-        {
-            swagger.Servers = new List<OpenApiServer> { new() { Url = $"{httpReq.Scheme}://{httpReq.Host.Value}" } };
-        });
-    });
+            swagger.Servers = new List<OpenApiServer>
+            {
+                new() { Url = $"{httpReq.Scheme}://{httpReq.Host.Value}" }
+            }));
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Server V1");

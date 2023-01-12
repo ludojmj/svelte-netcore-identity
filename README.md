@@ -36,7 +36,7 @@ npm run dev
 - Server based on API mechanisms of: <https://reqres.in/api/whatever>
 - Svelte template client borrowed from: <https://svelte.dev>
 - Identity service powered by: <https://demo.duendesoftware.com>
-- Identity client borrowed from: <https://github.com/dopry/svelte-oidc>
+- Identity client borrowed from: <https://github.com/AxaGuilDEv/react-oidc>
 - CSS borrowed from: <https://getbootstrap.com>
 - SVG borrowed from: <https://creativecommons.org>
 
@@ -115,14 +115,12 @@ npm run dev
 - Client consuming an embedded mocked API (http port 5173)
 
 ```bash
-VITE_REDIRECT_URI="http://localhost:5173"
 VITE_API_URL="http://localhost:5173/mock/stuff"
 ```
 
 - Client (http port 5173) consuming a distant API (https port 5001)
 
 ```bash
-VITE_REDIRECT_URI="http://localhost:5173"
 VITE_API_URL="https://localhost:5001/api/stuff"
 ```
 
@@ -133,7 +131,6 @@ VITE_API_URL="https://localhost:5001/api/stuff"
 ==> See: buildall.sh
 
 ```bash
-VITE_REDIRECT_URI="https://localhost:5001"
 VITE_API_URL="https://localhost:5001/api/stuff"
 ```
 
@@ -142,7 +139,6 @@ VITE_API_URL="https://localhost:5001/api/stuff"
 - Client and Server together in the same Web app hosted on a real domain
 
 ```bash
-VITE_REDIRECT_URI="https://www.example.com/"
 VITE_API_URL="https://www.example.com/api/stuff"
 ```
 
