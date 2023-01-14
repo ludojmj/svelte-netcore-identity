@@ -156,16 +156,16 @@ VITE_API_URL="https://www.example.com/api/stuff"
 
 - When using Firefox;
 - Running http://localhost:3000 (actually using http instead of https);
-- The website isS stucked, you must open the debug console to see this message.
+- The website is stucked, you must open the debug console to see this message.
 
 **Why?**
 
 - Firefox blocks third-party cookies between http and https.
 
-**How to solve:**
+**How to solve?**
 
-- Allow you website (http://localhost:3000) to use cookies and site data.
-- See: https://support.mozilla.org/en-US/kb/block-websites-storing-cookies-site-data-firefox
+- Allow your website (http://localhost:3000) to use cookies and site data;
+- Click to see how to proceed: https://support.mozilla.org/en-US/kb/block-websites-storing-cookies-site-data-firefox
 
 ### _An error occured. Please try again later._
 
@@ -175,7 +175,7 @@ VITE_API_URL="https://www.example.com/api/stuff"
 - The "real" error (not displayed in Production) is: _SQLite Error 5: 'database is locked'_;
 - There is a restricted write access to the file on Linux web app when running on Azure.
 
-**How to solve:**
+**How to solve?**
 
 - ==> Either use a real database or deploy the web app on Azure choosing Windows OS.
 
@@ -186,7 +186,7 @@ VITE_API_URL="https://www.example.com/api/stuff"
 - Running the Svelte client App (```npm run dev```);
 - Connecting to: <http://localhost:5173/>.
 
-**How to solve:**
+**How to solve?**
 
 - ==> Create the database _stuff.db_ (```sqlite3 Server/App_Data/stuff.db < Server/App_Data/create_tables.sql```).
 
@@ -197,7 +197,7 @@ VITE_API_URL="https://www.example.com/api/stuff"
 - Running the Svelte client App (```npm run dev```);
 - Connecting to: <http://localhost:5173/>.
 
-**How to solve:**
+**How to solve?**
 
 - ==> Start the .NET server (```dotnet run```) before the Svelte client App (```npm run dev```).
 
@@ -209,7 +209,7 @@ VITE_API_URL="https://www.example.com/api/stuff"
 - Connecting to: <http://localhost:5000/swagger>;
 - Or connecting to its redirection: <https://localhost:5001/swagger>.
 
-**How to solve:**
+**How to solve?**
 
 - ==> Click "Advanced settings" button;
 - ==> Click on the link to continue to the assumed unsafe localhost site;
@@ -221,7 +221,7 @@ VITE_API_URL="https://www.example.com/api/stuff"
 
 - Browsing the web site on a Azure Windows instance.
 
-**How to solve:**
+**How to solve?**
 
 - ==> Add the web.config file since you've got IIS running;
 - ==> On Linux, the web.config file is useless
