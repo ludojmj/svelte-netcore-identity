@@ -1,6 +1,6 @@
-using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Text.Json;
 
 namespace Server.Shared;
 
@@ -22,11 +22,11 @@ public sealed class TraceHandlerFilterAttribute : ActionFilterAttribute
             return;
         }
 
-        string operation = context.HttpContext.Request.Path.ToString();
+        var (clientId, operation) = context.GetClientAndOperation();
         foreach (var elt in context.ActionArguments)
         {
             var flux = JsonSerializer.Serialize(elt.Value, new JsonSerializerOptions { WriteIndented = true });
-            _logger.LogInformation($"{operation}_Request : {flux}");
+            _logger.LogInformation($"{operation}_Request {clientId}: {flux}");
         }
 
         base.OnActionExecuting(context);
@@ -40,30 +40,13 @@ public sealed class TraceHandlerFilterAttribute : ActionFilterAttribute
             return;
         }
 
-        string operation = context.HttpContext.Request.Path.ToString();
-        var result = context.Result;
-        if (result is ObjectResult elt)
+        var (clientId, operation) = context.GetClientAndOperation();
+        if (context.Result is ObjectResult elt)
         {
             string flux = JsonSerializer.Serialize(elt.Value, new JsonSerializerOptions { WriteIndented = true }).Truncate();
-            _logger.LogInformation($"{operation}_Response : {flux}");
+            _logger.LogInformation($"{operation}_Response {clientId}: {flux}");
         }
 
         base.OnActionExecuted(context);
-    }
-}
-
-// Truncate trace
-public static class StringExt
-{
-    private const int CstMaxLength = 2048;
-
-    public static string Truncate(this string value)
-    {
-        if (string.IsNullOrEmpty(value))
-        {
-            return value;
-        }
-
-        return value.Length <= CstMaxLength ? value : value.Substring(0, CstMaxLength);
     }
 }
