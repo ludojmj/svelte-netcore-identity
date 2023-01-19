@@ -41,9 +41,7 @@ public class UserAuthService : IUserAuthService
         result = new TUser
         {
             UsrId = claimList.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Sub)?.Value,
-            UsrName = claimList.FirstOrDefault(x => x.Type == "name")?.Value,
-            UsrGivenName = claimList.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.GivenName)?.Value,
-            UsrFamilyName = claimList.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.FamilyName)?.Value,
+            UsrName = claimList.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Name)?.Value,
             UsrEmail = claimList.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Email)?.Value
         };
 
