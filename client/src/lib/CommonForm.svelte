@@ -5,12 +5,11 @@
   import Loading from "./Loading.svelte";
   export let title, stuffDatum, inputError, disabled, handleSubmit;
 
-  const init = (el) => {
+  const setFocus = (el) => {
     el.focus();
   };
 
   const handleEscape = (event) => {
-    event.preventDefault();
     if (event.code == "Escape") {
       navigate("/");
     }
@@ -33,7 +32,7 @@
     <form
       class="alert alert-secondary"
       on:submit|preventDefault={handleSubmit}
-      on:keyup={handleEscape}
+      on:keyup|preventDefault={handleEscape}
     >
       <header
         class="modal-header alert {title.indexOf('Creating') > -1
@@ -64,7 +63,7 @@
       <label class="form-label" for="label">Label:</label>
       <input
         bind:value={stuffDatum.label}
-        use:init
+        use:setFocus
         class="form-control"
         type="text"
         maxLength="79"
