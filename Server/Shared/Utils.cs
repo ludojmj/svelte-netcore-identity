@@ -36,9 +36,9 @@ public static class Utils
         try
         {
             string accessToken = authToken.Replace("Bearer ", string.Empty, StringComparison.OrdinalIgnoreCase);
-            JwtSecurityToken decodePourAgent = new JwtSecurityTokenHandler().ReadJwtToken(accessToken);
-            var claimAgentList = decodePourAgent.Claims;
-            result = claimAgentList.FirstOrDefault(x => x.Type == "client_id")?.Value;
+            JwtSecurityToken decodeSub = new JwtSecurityTokenHandler().ReadJwtToken(accessToken);
+            var claimList = decodeSub.Claims;
+            result = claimList.FirstOrDefault(x => x.Type == "client_id")?.Value;
         }
         catch (Exception ex) when (ex is NullReferenceException || ex is ArgumentException)
         {
