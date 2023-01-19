@@ -43,10 +43,9 @@ public class TestStuffController
         // Arrange
         var mockStuffService = Mock.Of<IStuffService>(x => x.GetListAsync(1) == Task.FromResult(TestStuff));
         var controller = new StuffController();
-        int existingPage = 1;
 
         // Act
-        IActionResult actionResult = await controller.GetList(existingPage, null, mockStuffService);
+        IActionResult actionResult = await controller.GetList(1, null, mockStuffService);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(actionResult);
@@ -135,10 +134,9 @@ public class TestStuffController
         // Arrange
         var mockStuffService = Mock.Of<IStuffService>(x => x.UpdateAsync("1", TestDatum) == Task.FromResult(TestDatum));
         var controller = new StuffController();
-        string existingId = "1";
 
         // Act
-        IActionResult actionResult = await controller.Update(existingId, TestDatum, mockStuffService);
+        IActionResult actionResult = await controller.Update("1", TestDatum, mockStuffService);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(actionResult);
@@ -153,10 +151,9 @@ public class TestStuffController
         // Arrange
         var mockStuffService = Mock.Of<IStuffService>();
         var controller = new StuffController();
-        string badId = "2";
 
         // Act
-        IActionResult actionResult = await controller.Delete(badId, mockStuffService);
+        IActionResult actionResult = await controller.Delete("2", mockStuffService);
 
         // Assert
         Assert.IsType<NoContentResult>(actionResult);

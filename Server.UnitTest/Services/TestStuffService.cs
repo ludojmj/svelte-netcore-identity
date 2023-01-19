@@ -5,7 +5,6 @@ using Server.DbModels;
 using Server.Models;
 using Server.Services;
 using Server.Services.Interfaces;
-using Server.Shared;
 using Xunit;
 
 namespace Server.UnitTest.Services;
@@ -62,7 +61,7 @@ public class TestStuffService
             .Options;
         _context = new StuffDbContext(options);
         _context.Database.EnsureCreated();
-        var mockAuth = Mock.Of<IUserAuthService>(x => x.GetCurrentUserAsync(It.IsAny<string>()) == Task.FromResult(_dbUser));
+        var mockAuth = Mock.Of<IUserAuthService>(x => x.GetCurrentUser(It.IsAny<string>()) == _dbUser);
         _stuffService = new StuffService(_context, mockAuth);
     }
 
@@ -95,18 +94,16 @@ public class TestStuffService
     public async Task StuffService_GetListAsync_ShouldReturn_PageOne()
     {
         // Arrange
-        int requestedPage = 2;
         _context.Add(_dbUser);
         _context.Add(_dbStuff);
         await _context.SaveChangesAsync();
 
         // Act
-        var serviceResult = await _stuffService.GetListAsync(requestedPage);
+        var serviceResult = await _stuffService.GetListAsync(2);
 
         // Assert
-        var expected = 1;
         var actual = serviceResult.Page;
-        Assert.Equal(expected, actual);
+        Assert.Equal(1, actual);
     }
 
     // ***** ***** ***** SEARCH
@@ -231,7 +228,7 @@ public class TestStuffService
     }
 
     [Fact]
-    public async Task StuffService_ReadAsync_ShouldThrow_NotFoundException()
+    public async Task StuffService_ReadAsync_ShouldThrow_KeyNotFoundException()
     {
         // Arrange
         // No stuff
@@ -242,7 +239,7 @@ public class TestStuffService
 
         // Assert
         Assert.NotNull(exception);
-        Assert.IsType<NotFoundException>(exception);
+        Assert.IsType<KeyNotFoundException>(exception);
         Assert.Equal("Stuff not found.", exception.Message);
     }
 

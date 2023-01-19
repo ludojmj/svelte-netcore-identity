@@ -17,7 +17,7 @@ public class TestErrorController
         // Arrange
         var mockEnv = Mock.Of<IWebHostEnvironment>();
         var mockLog = Mock.Of<ILogger<ErrorController>>();
-        var mockException = Mock.Of<IExceptionHandlerFeature>(x => x.Error == new NotFoundException("Not found"));
+        var mockException = Mock.Of<IExceptionHandlerFeature>(x => x.Error == new KeyNotFoundException("Not found"));
 
         var context = new DefaultHttpContext();
         context.Features.Set(mockException);
@@ -33,9 +33,8 @@ public class TestErrorController
         // Assert
         var notFoundResult = Assert.IsType<NotFoundObjectResult>(actionResult);
         var contentResult = Assert.IsType<ErrorModel>(notFoundResult.Value);
-        var expected = "Not found";
         var actual = contentResult.Error;
-        Assert.Equal(expected, actual);
+        Assert.Equal("Not found", actual);
     }
 
     [Fact]
@@ -60,11 +59,9 @@ public class TestErrorController
         // Assert
         var notFoundResult = Assert.IsType<BadRequestObjectResult>(actionResult);
         var contentResult = Assert.IsType<ErrorModel>(notFoundResult.Value);
-        var expected = "Should be displayed";
         var actual = contentResult.Error;
-        Assert.Equal(expected, actual);
+        Assert.Equal("Should be displayed", actual);
     }
-
 
     [Fact]
     public void ErrorHandlerFilter_BadRequestObjectResult_Production()
@@ -88,8 +85,7 @@ public class TestErrorController
         // Assert
         var notFoundResult = Assert.IsType<BadRequestObjectResult>(actionResult);
         var contentResult = Assert.IsType<ErrorModel>(notFoundResult.Value);
-        var expected = "An error occured. Please try again later.";
         var actual = contentResult.Error;
-        Assert.Equal(expected, actual);
+        Assert.Equal("An error occured. Please try again later.", actual);
     }
 }

@@ -39,6 +39,7 @@ public class StuffController : ControllerBase
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(DatumModel), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Read(
         string id,
         [FromServices] IStuffService stuffService)

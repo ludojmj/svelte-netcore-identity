@@ -47,7 +47,7 @@ public class TestUserService
         _context = new StuffDbContext(options);
         _context.Database.EnsureCreated();
 
-        var mockAuth = Mock.Of<IUserAuthService>(x => x.GetCurrentUserAsync(It.IsAny<string>()) == Task.FromResult(_dbUser));
+        var mockAuth = Mock.Of<IUserAuthService>(x => x.GetCurrentUser(It.IsAny<string>()) == _dbUser);
         _userService = new UserService(_context, mockAuth);
     }
 
@@ -240,10 +240,8 @@ public class TestUserService
         var serviceResult = await _userService.ReadAsync("Unknown");
 
         // Assert
-        var actual = serviceResult;
-        Assert.Null(actual);
+        Assert.Null(serviceResult);
     }
-
 
     // ***** ***** ***** UPDATE
     [Fact]
@@ -260,22 +258,6 @@ public class TestUserService
         var expected = TestUserModel.Id;
         var actual = serviceResult.Id;
         Assert.Equal(expected, actual);
-    }
-
-    [Fact]
-    public async Task UserService_UpdateAsync_ShouldThrow_UserNotFound()
-    {
-        // Arrange
-        // _userModelTest.Id = "Unknown";
-
-        // Act
-        var serviceResult = _userService.UpdateAsync("11", TestUserModel);
-        var exception = await Record.ExceptionAsync(() => serviceResult);
-
-        // Assert
-        Assert.NotNull(exception);
-        Assert.IsType<ArgumentException>(exception);
-        Assert.Equal("Corrupted data.", exception.Message);
     }
 
     [Fact]

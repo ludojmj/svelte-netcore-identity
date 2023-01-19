@@ -9,7 +9,7 @@ public class ModelValidationFilterAttribute : ActionFilterAttribute
     {
         if (context == null)
         {
-            base.OnActionExecuting(null);
+            base.OnActionExecuting(null!);
             return;
         }
 

@@ -86,7 +86,7 @@ public class UserService : IUserService
             throw new ArgumentException("Corrupted data.");
         }
 
-        TUser dbUserAuth = await _userAuth.GetCurrentUserAsync("updated user");
+        TUser dbUserAuth = _userAuth.GetCurrentUser("updated user");
         TUser dbUser = await _context.TUsers.FirstOrDefaultAsync(x => x.UsrId == userId);
         if (dbUser == null || dbUser.UsrId != dbUserAuth.UsrId)
         {
@@ -101,7 +101,7 @@ public class UserService : IUserService
 
     public async Task DeleteAsync(string userId)
     {
-        TUser dbUserAuth = await _userAuth.GetCurrentUserAsync("deleted user");
+        TUser dbUserAuth = _userAuth.GetCurrentUser("deleted user");
         TUser dbUser = await _context.TUsers.FirstOrDefaultAsync(x => x.UsrId == userId);
         if (dbUser == null || dbUser.UsrId != dbUserAuth.UsrId)
         {

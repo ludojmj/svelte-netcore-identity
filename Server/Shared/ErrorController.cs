@@ -23,7 +23,7 @@ public class ErrorController : ControllerBase
             ? exception.Message
             : exception.InnerException.Message;
 
-        if (exception is NotFoundException)
+        if (exception is KeyNotFoundException)
         {
             return NotFound(new ErrorModel { Error = msg });
         }

@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Server.DbModels;
 using Server.Models;
 using Server.Services.Interfaces;
-using Server.Shared;
 
 namespace Server.Services;
 
@@ -69,7 +68,7 @@ public class StuffService : IStuffService
     {
         input.CheckDatum();
         TStuff dbStuff = input.ToCreate();
-        TUser dbUserAuth = await _userAuth.GetCurrentUserAsync("created datum");
+        TUser dbUserAuth = _userAuth.GetCurrentUser("created datum");
         TUser dbUser = await _context.TUsers.FirstOrDefaultAsync(x => x.UsrId == dbUserAuth.UsrId);
         if (dbUser == null)
         { // Create and attach new user
@@ -98,7 +97,7 @@ public class StuffService : IStuffService
 
         if (dbStuff == null)
         {
-            throw new NotFoundException("Stuff not found.");
+            throw new KeyNotFoundException("Stuff not found.");
         }
 
         var result = dbStuff.ToDatumModel();
@@ -113,7 +112,7 @@ public class StuffService : IStuffService
             throw new ArgumentException("Corrupted data.");
         }
 
-        TUser dbUserAuth = await _userAuth.GetCurrentUserAsync("updated datum");
+        TUser dbUserAuth = _userAuth.GetCurrentUser("updated datum");
         TStuff dbStuff = await _context.TStuffs.FirstOrDefaultAsync(x => x.StfId == stuffId);
         if (dbStuff == null || dbStuff.StfUserId != dbUserAuth.UsrId)
         {
@@ -131,7 +130,7 @@ public class StuffService : IStuffService
 
     public async Task DeleteAsync(string stuffId)
     {
-        TUser dbUserAuth = await _userAuth.GetCurrentUserAsync("deleted datum");
+        TUser dbUserAuth = _userAuth.GetCurrentUser("deleted datum");
         TStuff dbStuff = await _context.TStuffs.FirstOrDefaultAsync(x => x.StfId == stuffId);
         if (dbStuff == null || dbStuff.StfUserId != dbUserAuth.UsrId)
         {

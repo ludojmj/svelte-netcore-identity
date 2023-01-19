@@ -18,7 +18,7 @@ public sealed class TraceHandlerFilterAttribute : ActionFilterAttribute
     {
         if (context == null)
         {
-            base.OnActionExecuting(null);
+            base.OnActionExecuting(null!);
             return;
         }
 
@@ -36,7 +36,7 @@ public sealed class TraceHandlerFilterAttribute : ActionFilterAttribute
     {
         if (context == null)
         {
-            base.OnActionExecuted(null);
+            base.OnActionExecuted(null!);
             return;
         }
 

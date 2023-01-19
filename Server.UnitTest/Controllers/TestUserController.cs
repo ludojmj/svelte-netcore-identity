@@ -34,10 +34,9 @@ public class TestUserController
         // Arrange
         var mockUserService = Mock.Of<IUserService>(x => x.GetListAsync(1) == Task.FromResult(TestDirectory));
         var controller = new UserController();
-        int existingPage = 1;
 
         // Act
-        IActionResult actionResult = await controller.GetList(existingPage, null, mockUserService);
+        IActionResult actionResult = await controller.GetList(1, null, mockUserService);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(actionResult);
@@ -126,10 +125,9 @@ public class TestUserController
         // Arrange
         var mockUserService = Mock.Of<IUserService>(x => x.UpdateAsync("1", TestUser) == Task.FromResult(TestUser));
         var controller = new UserController();
-        string existingId = "1";
 
         // Act
-        IActionResult actionResult = await controller.Update(existingId, TestUser, mockUserService);
+        IActionResult actionResult = await controller.Update("1", TestUser, mockUserService);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(actionResult);
@@ -144,10 +142,9 @@ public class TestUserController
         // Arrange
         var mockUserService = Mock.Of<IUserService>();
         var controller = new UserController();
-        string badId = "2";
 
         // Act
-        IActionResult actionResult = await controller.Delete(badId, mockUserService);
+        IActionResult actionResult = await controller.Delete("2", mockUserService);
 
         // Assert
         Assert.IsType<NoContentResult>(actionResult);
