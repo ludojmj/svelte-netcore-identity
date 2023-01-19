@@ -6,4 +6,12 @@ public class NotFoundException : Exception
         : base(message)
     {
     }
+
+    public NotFoundException() : base()
+    {
+    }
+
+    public NotFoundException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
 }

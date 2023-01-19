@@ -57,10 +57,10 @@ public class UserAuthService : IUserAuthService
         result = new TUser
         {
             UsrId = decodeSub?.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Sub)?.Value,
-            UsrName = claimList.FirstOrDefault(x => x.Type == "name")?.Value,
-            UsrGivenName = claimList.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.GivenName)?.Value,
-            UsrFamilyName = claimList.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.FamilyName)?.Value,
-            UsrEmail = claimList.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Email)?.Value
+            UsrName = claimList.Find(x => x.Type == "name")?.Value,
+            UsrGivenName = claimList.Find(x => x.Type == JwtRegisteredClaimNames.GivenName)?.Value,
+            UsrFamilyName = claimList.Find(x => x.Type == JwtRegisteredClaimNames.FamilyName)?.Value,
+            UsrEmail = claimList.Find(x => x.Type == JwtRegisteredClaimNames.Email)?.Value
         };
 
         var cacheEntryOptions = new MemoryCacheEntryOptions

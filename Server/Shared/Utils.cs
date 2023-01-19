@@ -22,7 +22,7 @@ public static class Utils
             return value;
         }
 
-        return value.Length <= CstMaxLength ? value : value.Substring(0, CstMaxLength);
+        return value.Length <= CstMaxLength ? value : value[..CstMaxLength];
     }
 
     private static string ToLog(this string authToken)
