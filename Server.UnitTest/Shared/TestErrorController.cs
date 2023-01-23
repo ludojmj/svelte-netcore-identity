@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Hosting;
 using Moq;
-using Xunit;
 using Server.Shared;
+using Xunit;
 
 namespace Server.UnitTest.Shared;
 
@@ -15,8 +14,7 @@ public class TestErrorController
     public void ErrorController_NotFoundObjectResult()
     {
         // Arrange
-        var mockEnv = Mock.Of<IWebHostEnvironment>();
-        var mockLog = Mock.Of<ILogger<ErrorController>>();
+        var mockEnv = Mock.Of<IHostEnvironment>();
         var mockException = Mock.Of<IExceptionHandlerFeature>(x => x.Error == new KeyNotFoundException("Not found"));
 
         var context = new DefaultHttpContext();
@@ -28,7 +26,7 @@ public class TestErrorController
         };
 
         // Act
-        IActionResult actionResult = controller.Error(mockEnv, mockLog);
+        IActionResult actionResult = controller.Error(mockEnv);
 
         // Assert
         var notFoundResult = Assert.IsType<NotFoundObjectResult>(actionResult);
@@ -41,8 +39,7 @@ public class TestErrorController
     public void ErrorHandlerFilter_BadRequestObjectResult_Development()
     {
         // Arrange
-        var mockEnv = Mock.Of<IWebHostEnvironment>(x => x.EnvironmentName == "Development");
-        var mockLog = Mock.Of<ILogger<ErrorController>>();
+        var mockEnv = Mock.Of<IHostEnvironment>(x => x.EnvironmentName == "Development");
         var mockException = Mock.Of<IExceptionHandlerFeature>(x => x.Error == new ArgumentException("Should be displayed"));
 
         var context = new DefaultHttpContext();
@@ -54,7 +51,7 @@ public class TestErrorController
         };
 
         // Act
-        IActionResult actionResult = controller.Error(mockEnv, mockLog);
+        IActionResult actionResult = controller.Error(mockEnv);
 
         // Assert
         var notFoundResult = Assert.IsType<BadRequestObjectResult>(actionResult);
@@ -67,8 +64,7 @@ public class TestErrorController
     public void ErrorHandlerFilter_BadRequestObjectResult_Production()
     {
         // Arrange
-        var mockEnv = Mock.Of<IWebHostEnvironment>(x => x.EnvironmentName == "Production");
-        var mockLog = Mock.Of<ILogger<ErrorController>>();
+        var mockEnv = Mock.Of<IHostEnvironment>(x => x.EnvironmentName == "Production");
         var mockException = Mock.Of<IExceptionHandlerFeature>(x => x.Error == new ArgumentException("Should not be displayed"));
 
         var context = new DefaultHttpContext();
@@ -80,7 +76,7 @@ public class TestErrorController
         };
 
         // Act
-        IActionResult actionResult = controller.Error(mockEnv, mockLog);
+        IActionResult actionResult = controller.Error(mockEnv);
 
         // Assert
         var notFoundResult = Assert.IsType<BadRequestObjectResult>(actionResult);

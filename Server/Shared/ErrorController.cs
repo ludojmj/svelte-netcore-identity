@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Server.Shared;
 
@@ -7,9 +7,7 @@ namespace Server.Shared;
 [ApiExplorerSettings(IgnoreApi = true)]
 public class ErrorController : ControllerBase
 {
-    public IActionResult Error(
-        [FromServices] IWebHostEnvironment env,
-        [FromServices] ILogger<ErrorController> logger)
+    public IActionResult Error([FromServices] IHostEnvironment env)
     {
         var context = HttpContext.Features.Get<IExceptionHandlerFeature>();
         if (context == null)
@@ -18,7 +16,6 @@ public class ErrorController : ControllerBase
         }
 
         var exception = context.Error;
-        logger.LogCritical(exception, "Error");
         var msg = exception.InnerException == null
             ? exception.Message
             : exception.InnerException.Message;

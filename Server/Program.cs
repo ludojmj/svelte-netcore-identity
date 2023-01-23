@@ -1,15 +1,17 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using Server.DbModels;
-using Server.Shared;
-using Server.Services.Interfaces;
 using Server.Services;
+using Server.Services.Interfaces;
+using Server.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager conf = builder.Configuration;
-IWebHostEnvironment env = builder.Environment;
+IHostEnvironment env = builder.Environment;
+bool hasHttpLogs = conf.GetSection("HttpLogging").Get<bool>();
 
 // Add services to the container.
 builder.Services.AddHealthChecks();
@@ -19,6 +21,20 @@ builder.Services.AddMemoryCache();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddLogging(loggingBuilder => loggingBuilder.AddConfiguration(conf.GetSection("Logging")));
 builder.Services.AddApplicationInsightsTelemetry();
+if (hasHttpLogs)
+{
+    builder.Services.AddHttpLogging(logging =>
+    {
+        logging.LoggingFields =
+            HttpLoggingFields.RequestPath |
+            HttpLoggingFields.RequestQuery |
+            HttpLoggingFields.RequestBody |
+            HttpLoggingFields.ResponseStatusCode |
+            HttpLoggingFields.ResponseBody;
+        logging.RequestBodyLogLimit = 4096;
+        logging.ResponseBodyLogLimit = 4096;
+    });
+}
 
 // Add DB
 builder.Services.AddDbContext<StuffDbContext>(options => options.UseSqlite(
@@ -140,6 +156,16 @@ else
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSecurity();
+if (hasHttpLogs)
+{
+    app.UseHttpLogging();
+    app.Use(async (context, next) =>
+    {
+        var userInfo = context.GetCurrentUser();
+        app.Logger.LogInformation(userInfo.ToString());
+        await next();
+    });
+}
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers().RequireAuthorization();

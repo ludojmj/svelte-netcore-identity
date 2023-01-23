@@ -22,11 +22,16 @@ public sealed class TraceHandlerFilterAttribute : ActionFilterAttribute
             return;
         }
 
-        var (clientId, operation) = context.GetClientAndOperation();
+        var userInfo = context.HttpContext.GetCurrentUser();
         foreach (var elt in context.ActionArguments)
         {
+            if (elt.Key == "service")
+            {
+                return;
+            }
+
             var flux = JsonSerializer.Serialize(elt.Value, new JsonSerializerOptions { WriteIndented = true });
-            _logger.LogInformation($"{operation}_Request {clientId}: {flux}");
+            _logger.LogInformation($"{userInfo} Request: {elt.Key}={flux}");
         }
 
         base.OnActionExecuting(context);
@@ -40,11 +45,11 @@ public sealed class TraceHandlerFilterAttribute : ActionFilterAttribute
             return;
         }
 
-        var (clientId, operation) = context.GetClientAndOperation();
+        var userInfo = context.HttpContext.GetCurrentUser();
         if (context.Result is ObjectResult elt)
         {
             string flux = JsonSerializer.Serialize(elt.Value, new JsonSerializerOptions { WriteIndented = true }).Truncate();
-            _logger.LogInformation($"{operation}_Response {clientId}: {flux}");
+            _logger.LogInformation($"{userInfo} Response: {flux}");
         }
 
         base.OnActionExecuted(context);
