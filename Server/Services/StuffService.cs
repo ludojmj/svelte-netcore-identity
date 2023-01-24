@@ -2,19 +2,20 @@ using Microsoft.EntityFrameworkCore;
 using Server.DbModels;
 using Server.Models;
 using Server.Services.Interfaces;
+using Server.Shared;
 
 namespace Server.Services;
 
 public class StuffService : IStuffService
 {
     private const int CstItemsPerPage = 6;
-    private readonly IUserAuthService _userAuth;
-    private readonly StuffDbContext _context;
+    private readonly StuffDbContext _dbContext;
+    private readonly IHttpContextAccessor _httpContext;
 
-    public StuffService(StuffDbContext context, IUserAuthService userAuth)
+    public StuffService(StuffDbContext context, IHttpContextAccessor httpContext)
     {
-        _context = context;
-        _userAuth = userAuth;
+        _dbContext = context;
+        _httpContext = httpContext;
     }
 
     public async Task<StuffModel> GetListAsync(int page)
@@ -24,14 +25,14 @@ public class StuffService : IStuffService
             page = 1;
         }
 
-        int dbCount = await _context.TStuffs.CountAsync();
+        int dbCount = await _dbContext.TStuffs.CountAsync();
         int totalPages = ((dbCount - 1) / CstItemsPerPage) + 1;
         if (dbCount == 0 || page > totalPages)
         {
             page = 1;
         }
 
-        ICollection<TStuff> dbStuffList = await _context.TStuffs.AsQueryable()
+        ICollection<TStuff> dbStuffList = await _dbContext.TStuffs.AsQueryable()
             .OrderByDescending(x => x.StfUpdatedAt)
             .ThenByDescending(x => x.StfCreatedAt)
             .Skip(CstItemsPerPage * (page - 1))
@@ -44,7 +45,7 @@ public class StuffService : IStuffService
 
     public async Task<StuffModel> SearchListAsync(string search)
     {
-        IQueryable<TStuff> query = _context.TStuffs.Include(x => x.StfUser).Where(x =>
+        IQueryable<TStuff> query = _dbContext.TStuffs.Include(x => x.StfUser).Where(x =>
             EF.Functions.Like(x.StfLabel, $"%{search}%")
             || EF.Functions.Like(x.StfDescription, $"%{search}%")
             || EF.Functions.Like(x.StfOtherInfo, $"%{search}%")
@@ -68,21 +69,21 @@ public class StuffService : IStuffService
     {
         input.CheckDatum();
         TStuff dbStuff = input.ToCreate();
-        TUser dbUserAuth = _userAuth.GetCurrentUser("created datum");
-        TUser dbUser = await _context.TUsers.FirstOrDefaultAsync(x => x.UsrId == dbUserAuth.UsrId);
+        UserModel userAuth = _httpContext.HttpContext.GetCurrentUser();
+        TUser dbUser = await _dbContext.TUsers.FirstOrDefaultAsync(x => x.UsrId == userAuth.Id);
         if (dbUser == null)
         { // Create and attach new user
-            dbUserAuth.UsrCreatedAt = DateTime.UtcNow.ToStrDate();
-            dbStuff.StfUser = dbUserAuth;
+            dbUser.UsrCreatedAt = DateTime.UtcNow.ToStrDate();
+            dbStuff.StfUser = dbUser;
         }
 
         // Attach foreign key
-        dbStuff.StfUserId = dbUserAuth.UsrId;
+        dbStuff.StfUserId = dbUser.UsrId;
         // Create stuff
-        await _context.TStuffs.AddAsync(dbStuff);
-        await _context.SaveChangesAsync();
+        await _dbContext.TStuffs.AddAsync(dbStuff);
+        await _dbContext.SaveChangesAsync();
         // Attach user to the stuff for the response
-        dbStuff.StfUser = dbUserAuth;
+        dbStuff.StfUser = dbUser;
         var result = dbStuff.ToDatumModel();
         return result;
     }
@@ -90,7 +91,7 @@ public class StuffService : IStuffService
     public async Task<DatumModel> ReadAsync(string stuffId)
     {
         // Get the stuff and its user
-        TStuff dbStuff = await _context.TStuffs
+        TStuff dbStuff = await _dbContext.TStuffs
             .Where(x => x.StfId == stuffId)
             .Include(x => x.StfUser)
             .FirstOrDefaultAsync();
@@ -112,32 +113,33 @@ public class StuffService : IStuffService
             throw new ArgumentException("Corrupted data.");
         }
 
-        TUser dbUserAuth = _userAuth.GetCurrentUser("updated datum");
-        TStuff dbStuff = await _context.TStuffs.FirstOrDefaultAsync(x => x.StfId == stuffId);
-        if (dbStuff == null || dbStuff.StfUserId != dbUserAuth.UsrId)
+        UserModel userAuth = _httpContext.HttpContext.GetCurrentUser();
+        TUser dbUser = await _dbContext.TUsers.FirstOrDefaultAsync(x => x.UsrId == userAuth.Id);
+        TStuff dbStuff = await _dbContext.TStuffs.FirstOrDefaultAsync(x => x.StfId == stuffId);
+        if (dbStuff == null || dbStuff.StfUserId != userAuth.Id)
         {
             throw new ArgumentException("Corrupted data.");
         }
 
         // Update stuff
         dbStuff = input.ToUpdate(dbStuff);
-        await _context.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync();
         // Attach user to the stuff for the response
-        dbStuff.StfUser = dbUserAuth;
+        dbStuff.StfUser = dbUser;
         var result = dbStuff.ToDatumModel();
         return result;
     }
 
     public async Task DeleteAsync(string stuffId)
     {
-        TUser dbUserAuth = _userAuth.GetCurrentUser("deleted datum");
-        TStuff dbStuff = await _context.TStuffs.FirstOrDefaultAsync(x => x.StfId == stuffId);
-        if (dbStuff == null || dbStuff.StfUserId != dbUserAuth.UsrId)
+        UserModel userAuth = _httpContext.HttpContext.GetCurrentUser();
+        TStuff dbStuff = await _dbContext.TStuffs.FirstOrDefaultAsync(x => x.StfId == stuffId);
+        if (dbStuff == null || dbStuff.StfUserId != userAuth.Id)
         {
             throw new ArgumentException("Corrupted data.");
         }
 
-        _context.TStuffs.Remove(dbStuff);
-        await _context.SaveChangesAsync();
+        _dbContext.TStuffs.Remove(dbStuff);
+        await _dbContext.SaveChangesAsync();
     }
 }

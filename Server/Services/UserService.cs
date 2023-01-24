@@ -8,13 +8,11 @@ namespace Server.Services;
 public class UserService : IUserService
 {
     private const int CstItemsPerPage = 6;
-    private readonly IUserAuthService _userAuth;
-    private readonly StuffDbContext _context;
+    private readonly StuffDbContext _dbContext;
 
-    public UserService(StuffDbContext context, IUserAuthService userAuth)
+    public UserService(StuffDbContext context)
     {
-        _context = context;
-        _userAuth = userAuth;
+        _dbContext = context;
     }
 
     public async Task<DirectoryModel> GetListAsync(int page)
@@ -24,7 +22,7 @@ public class UserService : IUserService
             page = 1;
         }
 
-        int dbCount = await _context.TUsers.CountAsync();
+        int dbCount = await _dbContext.TUsers.CountAsync();
         int totalPages = ((dbCount - 1) / CstItemsPerPage) + 1;
         if (dbCount == 0 || page > totalPages)
         {
@@ -32,7 +30,7 @@ public class UserService : IUserService
             totalPages = 1;
         }
 
-        ICollection<TUser> dbUserList = await _context.TUsers
+        ICollection<TUser> dbUserList = await _dbContext.TUsers
             .OrderByDescending(x => x.UsrUpdatedAt)
             .ThenByDescending(x => x.UsrCreatedAt)
             .Skip(CstItemsPerPage * (page - 1))
@@ -44,7 +42,7 @@ public class UserService : IUserService
 
     public async Task<DirectoryModel> SearchListAsync(string search)
     {
-        IQueryable<TUser> query = _context.TUsers.Where(x =>
+        IQueryable<TUser> query = _dbContext.TUsers.Where(x =>
             EF.Functions.Like(x.UsrGivenName, $"%{search}%")
             || EF.Functions.Like(x.UsrFamilyName, $"%{search}%")
         );
@@ -64,15 +62,15 @@ public class UserService : IUserService
     {
         input.CheckUser();
         TUser dbUser = input.ToCreate();
-        await _context.TUsers.AddAsync(dbUser);
-        await _context.SaveChangesAsync();
+        await _dbContext.TUsers.AddAsync(dbUser);
+        await _dbContext.SaveChangesAsync();
         var result = dbUser.ToUserModel();
         return result;
     }
 
     public async Task<UserModel> ReadAsync(string userId)
     {
-        TUser dbUser = await _context.TUsers.FirstOrDefaultAsync(x => x.UsrId == userId);
+        TUser dbUser = await _dbContext.TUsers.FirstOrDefaultAsync(x => x.UsrId == userId);
         var result = dbUser.ToUserModel();
         return result;
     }
@@ -86,29 +84,27 @@ public class UserService : IUserService
             throw new ArgumentException("Corrupted data.");
         }
 
-        TUser dbUserAuth = _userAuth.GetCurrentUser("updated user");
-        TUser dbUser = await _context.TUsers.FirstOrDefaultAsync(x => x.UsrId == userId);
-        if (dbUser == null || dbUser.UsrId != dbUserAuth.UsrId)
+        TUser dbUser = await _dbContext.TUsers.FirstOrDefaultAsync(x => x.UsrId == userId);
+        if (dbUser == null)
         {
             throw new ArgumentException("Corrupted data.");
         }
 
         dbUser = input.ToUpdate(dbUser);
-        await _context.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync();
         var result = dbUser.ToUserModel();
         return result;
     }
 
     public async Task DeleteAsync(string userId)
     {
-        TUser dbUserAuth = _userAuth.GetCurrentUser("deleted user");
-        TUser dbUser = await _context.TUsers.FirstOrDefaultAsync(x => x.UsrId == userId);
-        if (dbUser == null || dbUser.UsrId != dbUserAuth.UsrId)
+        TUser dbUser = await _dbContext.TUsers.FirstOrDefaultAsync(x => x.UsrId == userId);
+        if (dbUser == null)
         {
             throw new ArgumentException("Corrupted data.");
         }
 
-        _context.TUsers.Remove(dbUser);
-        await _context.SaveChangesAsync();
+        _dbContext.TUsers.Remove(dbUser);
+        await _dbContext.SaveChangesAsync();
     }
 }

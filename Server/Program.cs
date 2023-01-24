@@ -17,7 +17,6 @@ bool hasHttpLogs = conf.GetSection("HttpLogging").Get<bool>();
 builder.Services.AddHealthChecks();
 builder.Services.AddControllers();
 builder.Services.AddCors();
-builder.Services.AddMemoryCache();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddLogging(loggingBuilder => loggingBuilder.AddConfiguration(conf.GetSection("Logging")));
 builder.Services.AddApplicationInsightsTelemetry();
@@ -52,12 +51,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddMvc(options =>
 {
-    options.Filters.Add(typeof(TraceHandlerFilterAttribute));
+    if (!hasHttpLogs)
+    {
+        options.Filters.Add(typeof(TraceHandlerFilterAttribute));
+    }
     options.Filters.Add(typeof(ModelValidationFilterAttribute));
 });
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
-{   // Managed by Shared/ModelValidationFilter.cs
+{   // Managed by Shared/ModelValidationFilterAttribute.cs
     options.SuppressModelStateInvalidFilter = true;
 });
 
@@ -105,7 +107,6 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // Register Services
-builder.Services.AddScoped<IUserAuthService, UserAuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IStuffService, StuffService>();
 
