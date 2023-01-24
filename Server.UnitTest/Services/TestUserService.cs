@@ -1,6 +1,5 @@
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Moq;
 using Server.DbModels;
 using Server.Models;
 using Server.Services;
@@ -34,7 +33,7 @@ public class TestUserService
     };
 
     private readonly SqliteConnection _connection;
-    private readonly StuffDbContext _context;
+    private readonly StuffDbContext _dbContext;
     private readonly IUserService _userService;
 
     public TestUserService()
@@ -44,17 +43,15 @@ public class TestUserService
         var options = new DbContextOptionsBuilder<StuffDbContext>()
             .UseSqlite(_connection)
             .Options;
-        _context = new StuffDbContext(options);
-        _context.Database.EnsureCreated();
-
-        var mockAuth = Mock.Of<IUserAuthService>(x => x.GetCurrentUser(It.IsAny<string>()) == _dbUser);
-        _userService = new UserService(_context, mockAuth);
+        _dbContext = new StuffDbContext(options);
+        _dbContext.Database.EnsureCreated();
+        _userService = new UserService(_dbContext);
     }
 
     [Fact]
     public void Dispose()
     {
-        _context.Dispose();
+        _dbContext.Dispose();
         _connection.Close();
     }
 
@@ -63,8 +60,8 @@ public class TestUserService
     public async Task UserService_GetListAsync_ShouldReturn_Ok()
     {
         // Arrange
-        _context.Add(_dbUser);
-        await _context.SaveChangesAsync();
+        _dbContext.Add(_dbUser);
+        await _dbContext.SaveChangesAsync();
 
         // Act
         var serviceResult = await _userService.GetListAsync(1);
@@ -80,8 +77,8 @@ public class TestUserService
     public async Task UserService_SearchListAsync_ShouldReturn_Ok()
     {
         // Arrange
-        _context.Add(_dbUser);
-        await _context.SaveChangesAsync();
+        _dbContext.Add(_dbUser);
+        await _dbContext.SaveChangesAsync();
 
         // Act
         var serviceResult = await _userService.SearchListAsync("GIVENNAME");
@@ -103,8 +100,8 @@ public class TestUserService
             dbUserList.Add(tpmUser);
         }
 
-        _context.AddRange(dbUserList);
-        await _context.SaveChangesAsync();
+        _dbContext.AddRange(dbUserList);
+        await _dbContext.SaveChangesAsync();
 
         // Act
         var serviceResult = _userService.SearchListAsync("GIVENNAME");
@@ -136,8 +133,8 @@ public class TestUserService
     public async Task UserService_CreateAsync_ShouldThrow_InvalidOperationException()
     {
         // Arrange
-        _context.Add(_dbUser);
-        await _context.SaveChangesAsync();
+        _dbContext.Add(_dbUser);
+        await _dbContext.SaveChangesAsync();
 
         // Act
         var serviceResult = _userService.CreateAsync(TestUserModel);
@@ -218,8 +215,8 @@ public class TestUserService
     public async Task UserService_ReadAsync_ShouldReturn_Ok()
     {
         // Arrange
-        _context.Add(_dbUser);
-        await _context.SaveChangesAsync();
+        _dbContext.Add(_dbUser);
+        await _dbContext.SaveChangesAsync();
 
         // Act
         var serviceResult = await _userService.ReadAsync("11");
@@ -248,8 +245,8 @@ public class TestUserService
     public async Task UserService_UpdateAsync_ShouldReturn_Ok()
     {
         // Arrange
-        _context.Add(_dbUser);
-        await _context.SaveChangesAsync();
+        _dbContext.Add(_dbUser);
+        await _dbContext.SaveChangesAsync();
 
         // Act
         var serviceResult = await _userService.UpdateAsync("11", TestUserModel);
@@ -341,12 +338,12 @@ public class TestUserService
     public async Task UserService_DeleteAsync_ShouldReturn_Ok()
     {
         // Arrange
-        _context.Add(_dbUser);
-        await _context.SaveChangesAsync();
+        _dbContext.Add(_dbUser);
+        await _dbContext.SaveChangesAsync();
 
         // Act
         await _userService.DeleteAsync("11");
-        var actual = _context.TUsers.FirstOrDefault(x => x.UsrId == "1");
+        var actual = _dbContext.TUsers.FirstOrDefault(x => x.UsrId == "1");
 
         // Assert
         Assert.Null(actual);
