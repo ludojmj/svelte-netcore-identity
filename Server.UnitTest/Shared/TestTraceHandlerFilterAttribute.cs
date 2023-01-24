@@ -6,8 +6,10 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Server.Models;
 using Server.Shared;
 using System.Security.Claims;
+using System.Text.Json;
 using Xunit;
 
 namespace Server.UnitTest.Shared;
@@ -104,6 +106,15 @@ public class TestTraceHandlerFilterAttribute
     public void Test_OnActionExecuting_Operation_AuthToken()
     {
         // Arrange
+        UserModel expectedUser = new()
+        {
+            AppId = "UserAPI",
+            Email = "UserAPI",
+            Id = "UserAPI",
+            Name = "UserAPI",
+            Operation = "7: /path"
+        };
+        var userLog = JsonSerializer.Serialize(expectedUser, new JsonSerializerOptions { WriteIndented = true });
         var context = new ActionContext(
             Mock.Of<HttpContext>(x =>
             x.User.FindFirst(It.IsAny<string>()) == new Claim("name", "UserAPI")
@@ -135,7 +146,7 @@ public class TestTraceHandlerFilterAttribute
         Mock.Get(_logger).Verify(x => x.Log(
             It.Is<LogLevel>(l => l == LogLevel.Information),
             It.IsAny<EventId>(),
-            It.Is<It.IsAnyType>((v, _) => v.ToString() == "{\r\n  \"Operation\": \"7: /path\",\r\n  \"AppId\": \"UserAPI\",\r\n  \"Id\": \"UserAPI\",\r\n  \"Name\": \"UserAPI\",\r\n  \"GivenName\": null,\r\n  \"FamilyName\": null,\r\n  \"Email\": \"UserAPI\",\r\n  \"CreatedAt\": null,\r\n  \"UpdatedAt\": null\r\n} Request: Id=\"123\""),
+            It.Is<It.IsAnyType>((v, _) => v.ToString() == userLog + " Request: Id=\"123\""),
             It.IsAny<Exception>(),
             (Func<It.IsAnyType, Exception?, string>)It.IsAny<object>()));
     }
@@ -144,6 +155,15 @@ public class TestTraceHandlerFilterAttribute
     public void Test_OnActionExecuted_Operation_AuthToken()
     {
         // Arrange
+        UserModel expectedUser = new()
+        {
+            AppId = "UserAPI",
+            Email = "UserAPI",
+            Id = "UserAPI",
+            Name = "UserAPI",
+            Operation = "7: /path"
+        };
+        var userLog = JsonSerializer.Serialize(expectedUser, new JsonSerializerOptions { WriteIndented = true });
         var context = new ActionContext(
             Mock.Of<HttpContext>(x =>
             x.User.FindFirst(It.IsAny<string>()) == new Claim("name", "UserAPI")
@@ -171,7 +191,7 @@ public class TestTraceHandlerFilterAttribute
         Mock.Get(_logger).Verify(x => x.Log(
             It.Is<LogLevel>(l => l == LogLevel.Information),
             It.IsAny<EventId>(),
-            It.Is<It.IsAnyType>((v, _) => v.ToString() == "{\r\n  \"Operation\": \"7: /path\",\r\n  \"AppId\": \"UserAPI\",\r\n  \"Id\": \"UserAPI\",\r\n  \"Name\": \"UserAPI\",\r\n  \"GivenName\": null,\r\n  \"FamilyName\": null,\r\n  \"Email\": \"UserAPI\",\r\n  \"CreatedAt\": null,\r\n  \"UpdatedAt\": null\r\n} Response: \"fubar\""),
+            It.Is<It.IsAnyType>((v, _) => v.ToString() == userLog + " Response: \"fubar\""),
             It.IsAny<Exception>(),
             (Func<It.IsAnyType, Exception?, string>)It.IsAny<object>()));
     }
@@ -180,6 +200,11 @@ public class TestTraceHandlerFilterAttribute
     public void Test_OnActionExecuting_Operation_Anonymous()
     {
         // Arrange
+        UserModel expectedUser = new()
+        {
+            Operation = "7: /path"
+        };
+        var userLog = JsonSerializer.Serialize(expectedUser, new JsonSerializerOptions { WriteIndented = true });
         var context = new ActionContext(
             Mock.Of<HttpContext>(x =>
             x.User.FindFirst(It.IsAny<string>()) == null
@@ -211,7 +236,7 @@ public class TestTraceHandlerFilterAttribute
         Mock.Get(_logger).Verify(x => x.Log(
             It.Is<LogLevel>(l => l == LogLevel.Information),
             It.IsAny<EventId>(),
-            It.Is<It.IsAnyType>((v, _) => v.ToString() == "{\r\n  \"Operation\": \"7: /path\",\r\n  \"AppId\": null,\r\n  \"Id\": null,\r\n  \"Name\": null,\r\n  \"GivenName\": null,\r\n  \"FamilyName\": null,\r\n  \"Email\": null,\r\n  \"CreatedAt\": null,\r\n  \"UpdatedAt\": null\r\n} Request: Id=\"123\""),
+            It.Is<It.IsAnyType>((v, _) => v.ToString() == userLog + " Request: Id=\"123\""),
             It.IsAny<Exception>(),
             (Func<It.IsAnyType, Exception?, string>)It.IsAny<object>()));
     }
@@ -220,6 +245,11 @@ public class TestTraceHandlerFilterAttribute
     public void Test_OnActionExecuted_Operation_Anonymous()
     {
         // Arrange
+        UserModel expectedUser = new()
+        {
+            Operation = "7: /path"
+        };
+        var userLog = JsonSerializer.Serialize(expectedUser, new JsonSerializerOptions { WriteIndented = true });
         var context = new ActionContext(
             Mock.Of<HttpContext>(x =>
             x.User.FindFirst(It.IsAny<string>()) == null
@@ -247,7 +277,7 @@ public class TestTraceHandlerFilterAttribute
         Mock.Get(_logger).Verify(x => x.Log(
             It.Is<LogLevel>(l => l == LogLevel.Information),
             It.IsAny<EventId>(),
-            It.Is<It.IsAnyType>((v, _) => v.ToString() == "{\r\n  \"Operation\": \"7: /path\",\r\n  \"AppId\": null,\r\n  \"Id\": null,\r\n  \"Name\": null,\r\n  \"GivenName\": null,\r\n  \"FamilyName\": null,\r\n  \"Email\": null,\r\n  \"CreatedAt\": null,\r\n  \"UpdatedAt\": null\r\n} Response: \"fubar\""),
+            It.Is<It.IsAnyType>((v, _) => v.ToString() == userLog + " Response: \"fubar\""),
             It.IsAny<Exception>(),
             (Func<It.IsAnyType, Exception?, string>)It.IsAny<object>()));
     }
