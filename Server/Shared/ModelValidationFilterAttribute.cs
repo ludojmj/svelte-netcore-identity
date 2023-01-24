@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 namespace Server.Shared;
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-public class ModelValidationFilterAttribute : ActionFilterAttribute
+public sealed class ModelValidationFilterAttribute : ActionFilterAttribute
 {
     public override void OnActionExecuting(ActionExecutingContext context)
     {

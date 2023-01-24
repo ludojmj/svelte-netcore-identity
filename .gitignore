@@ -2,6 +2,7 @@
 **/public/build/
 **/bin/
 **/obj/
+**/dist/
 **/wwwroot/
 **/Logs/
 **/build/
