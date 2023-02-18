@@ -2,10 +2,11 @@
   // StuffUpdate.svelte
   import { onMount } from "svelte";
   import { navigate } from "svelte-navigator";
-  import { selectedItem } from "../store.js";
-  import { apiUpdateStuff } from "../api/stuff";
+  import { crud } from "../lib/const.js";
+  import { selectedItem } from "../lib/store.js";
+  import { apiUpdateStuffAsync } from "../lib/api.js";
   import CommonForm from "./CommonForm.svelte";
-  import Error from "./Error.svelte";
+  import Error from "./common/Error.svelte";
   export let id;
 
   $: stuffDatum = $selectedItem || {};
@@ -44,7 +45,7 @@
       return;
     }
 
-    stuffDatum = await apiUpdateStuff(id, stuffDatum);
+    stuffDatum = await apiUpdateStuffAsync(id, stuffDatum);
     if (!stuffDatum.error) {
       navigate("/");
     }
@@ -52,10 +53,10 @@
 </script>
 
 {#if id !== "" + $selectedItem.id}
-  <Error msgErr="This is not what you want to update." />
+  <Error msgErr="This is not what you want to update." hasReset={true} />
 {:else}
   <CommonForm
-    title="Updating a stuff"
+    title={crud.UPDATE}
     {stuffDatum}
     {inputError}
     disabled={false}

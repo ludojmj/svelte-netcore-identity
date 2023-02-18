@@ -1,7 +1,8 @@
 <script>
   // StuffCreate.svelte
   import { navigate } from "svelte-navigator";
-  import { apiCreateStuff } from "../api/stuff";
+  import { crud } from "../lib/const.js";
+  import { apiCreateStuffAsync } from "../lib/api.js";
   import CommonForm from "./CommonForm.svelte";
 
   let inputError = "";
@@ -22,19 +23,17 @@
       return;
     }
 
-    stuffDatum = await apiCreateStuff(stuffDatum);
+    stuffDatum = await apiCreateStuffAsync(stuffDatum);
     if (!stuffDatum.error) {
       navigate("/");
     }
   };
 </script>
 
-<main>
-  <CommonForm
-    title="Creating a stuff"
-    {stuffDatum}
-    {inputError}
-    disabled={false}
-    {handleSubmit}
-  />
-</main>
+<CommonForm
+  title={crud.CREATE}
+  {stuffDatum}
+  {inputError}
+  disabled={false}
+  {handleSubmit}
+/>

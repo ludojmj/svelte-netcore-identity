@@ -1,85 +1,92 @@
-// stuffList.js
+// api.js
 import axios from "axios";
+import { apiErrMsg } from "./const.js";
+import { isLoading } from "./store.js";
 
 const rootApi = import.meta.env.VITE_API_URL;
 const isMock = rootApi.indexOf("mock") > -1;
-const axiosCall = async (params) => {
+const axiosCallAsync = async (params) => {
+  isLoading.set(true);
   try {
     const result = await axios(params);
     return result.data;
   } catch (error) {
     return { error: getErrorMsg(error) };
+  } finally {
+    isLoading.set(false);
   }
 };
 
-export const apiGetStuffList = async (accessToken, idToken) => {
-  const mock = isMock ? ".json" : "";
-  const getMsg = {
-    method: "get",
-    headers: { "authorization": `Bearer ${accessToken}`, "id_token": idToken },
-    url: rootApi + mock
-  };
-  return axiosCall(getMsg);
-};
-
-export const apiSearchStuff = async (search) => {
+export const apiSearchStuffAsync = async (search) => {
   const mock = isMock ? ".json" : "";
   const getMsg = {
     method: "get",
     url: `${rootApi}${mock}?search=${search}`
   };
-  return axiosCall(getMsg);
+  return axiosCallAsync(getMsg);
 };
 
-export const apiGotoPage = async (page) => {
+export const apiGetStuffListAsync = async (accessToken, idToken) => {
+  const mock = isMock ? ".json" : "";
+  const getMsg = {
+    method: "get",
+    url: rootApi + mock
+  };
+  return axiosCallAsync(getMsg);
+};
+
+export const apiGotoPageAsync = async (page) => {
   const mock = isMock ? ".json" : "";
   const getMsg = {
     method: "get",
     url: `${rootApi}${mock}?page=${page}`
   };
-  return axiosCall(getMsg);
+  return axiosCallAsync(getMsg);
 };
 
-export const apiGetStuffById = async (id) => {
+export const apiGetStuffByIdAsync = async (id) => {
   const mock = isMock ? ".json" : "";
   const getMsg = {
     method: "get",
     url: `${rootApi}/${id}${mock}`
   };
-  return axiosCall(getMsg);
+  return axiosCallAsync(getMsg);
 };
 
-export const apiCreateStuff = async (input) => {
+export const apiCreateStuffAsync = async (input) => {
   const mock = isMock ? ".json" : "";
   const postMsg = {
     method: isMock ? "get" : "post",
     url: rootApi + mock,
     data: input
   };
-  return axiosCall(postMsg);
+  return axiosCallAsync(postMsg);
 };
 
-export const apiUpdateStuff = async (id, input) => {
+export const apiUpdateStuffAsync = async (id, input) => {
   const mock = isMock ? ".json" : "";
   const putMsg = {
     method: isMock ? "get" : "put",
     url: `${rootApi}/${id}${mock}`,
     data: input
   };
-  return axiosCall(putMsg);
+  return axiosCallAsync(putMsg);
 };
 
-export const apiDeleteStuff = async (id) => {
+export const apiDeleteStuffAsync = async (id) => {
   const mock = isMock ? ".json" : "";
   const deleteMsg = {
     method: isMock ? "get" : "delete",
     url: `${rootApi}/${id}${mock}`
   };
-  return axiosCall(deleteMsg);
+  return axiosCallAsync(deleteMsg);
 };
 
 const getErrorMsg = error => {
-  const msg = "An error occured. Try again later.";
+  const msg = apiErrMsg.generic;
+  if (error.response && error.response.status === 401) {
+    return apiErrMsg.unauthorized;
+  }
   if (error.response && error.response.data && error.response.data.error) {
     return error.response.data.error;
   }

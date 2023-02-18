@@ -1,9 +1,10 @@
 <script>
   // StuffRead.svelte
   import { navigate } from "svelte-navigator";
-  import { selectedItem } from "../store.js";
+  import { crud } from "../lib/const.js";
+  import { selectedItem } from "../lib/store.js";
   import CommonForm from "./CommonForm.svelte";
-  import Error from "./Error.svelte";
+  import Error from "./common/Error.svelte";
   export let id;
 
   $: stuffDatum = $selectedItem || {};
@@ -14,10 +15,10 @@
 </script>
 
 {#if id !== $selectedItem.id}
-  <Error msgErr="This is not what you want to read." />
+  <Error msgErr="This is not what you want to read." hasReset={true} />
 {:else}
   <CommonForm
-    title="Reading a stuff"
+    title={crud.READ}
     {stuffDatum}
     inputError={null}
     disabled={true}
