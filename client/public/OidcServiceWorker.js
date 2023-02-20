@@ -22,7 +22,8 @@ const database = {
         configurationName: 'default',
         tokens: null,
         status: null,
-        items: [],
+        state: null,
+        codeVerifier: null,
         nonce: null,
         oidcServerConfiguration: null,
     },
@@ -217,7 +218,7 @@ const getCurrentDatabaseDomain = (database, url) => {
                 let domain = domainsToSendTokens[i];
 
                 if (typeof domain === 'string') {
-                    domain = new RegExp(`^${domain}`, 'gm');
+                    domain = new RegExp(`^${domain}`);
                 }
 
                 if (domain.test?.(url)) {
@@ -249,6 +250,7 @@ const serializeHeaders = (headers) => {
 const REFRESH_TOKEN = 'REFRESH_TOKEN_SECURED_BY_OIDC_SERVICE_WORKER';
 const ACCESS_TOKEN = 'ACCESS_TOKEN_SECURED_BY_OIDC_SERVICE_WORKER';
 const NONCE_TOKEN = 'NONCE_SECURED_BY_OIDC_SERVICE_WORKER';
+const CODE_VERIFIER = 'CODE_VERIFIER_SECURED_BY_OIDC_SERVICE_WORKER';
 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -286,6 +288,7 @@ const handleFetch = async (event) => {
                 ...serializeHeaders(originalRequest.headers),
                 authorization: 'Bearer ' + currentDatabaseForRequestAccessToken.tokens.access_token,
             },
+            mode: currentDatabaseForRequestAccessToken.oidcConfiguration.service_worker_convert_all_requests_to_cors ? 'cors' : originalRequest.mode,
         });
         event.waitUntil(event.respondWith(fetch(newRequest)));
         return;
@@ -345,8 +348,16 @@ const handleFetch = async (event) => {
                 } else if (actualBody.includes('code_verifier=') && currentLoginCallbackConfigurationName) {
                     currentDatabase = database[currentLoginCallbackConfigurationName];
                     currentLoginCallbackConfigurationName = null;
+                    let newBody = actualBody;
+                    if (currentDatabase && currentDatabase.codeVerifier != null) {
+                        const keyCodeVerifier = CODE_VERIFIER + '_' + currentDatabase.configurationName;
+                        if (actualBody.includes(keyCodeVerifier)) {
+                            newBody = newBody.replace(keyCodeVerifier, currentDatabase.codeVerifier);
+                        }
+                    }
+
                     return fetch(originalRequest, {
-                        body: actualBody,
+                        body: newBody,
                         method: clonedRequest.method,
                         headers: {
                             ...serializeHeaders(originalRequest.headers),
@@ -393,7 +404,7 @@ const checkDomain = (domains, endpoint) => {
         let testable = domain;
 
         if (typeof domain === 'string') {
-            testable = new RegExp(`^${domain}`, 'gm');
+            testable = new RegExp(`^${domain}`);
         }
 
         return testable.test?.(endpoint);
@@ -412,7 +423,8 @@ addEventListener('message', event => {
     if (!currentDatabase) {
         database[configurationName] = {
             tokens: null,
-            items: [],
+            state: null,
+            codeVerifier: null,
             oidcServerConfiguration: null,
             oidcConfiguration: null,
             status: null,
@@ -425,12 +437,10 @@ addEventListener('message', event => {
     }
 
     switch (data.type) {
-        case 'loadItems':
-            port.postMessage(database[configurationName].items);
-            return;
         case 'clear':
             currentDatabase.tokens = null;
-            currentDatabase.items = null;
+            currentDatabase.state = null;
+            currentDatabase.codeVerifier = null;
             currentDatabase.status = data.data.status;
             port.postMessage({ configurationName });
             return;
@@ -478,7 +488,25 @@ addEventListener('message', event => {
             }
             return;
         }
-
+        case 'setState':
+            currentDatabase.state = data.data.state;
+            port.postMessage({ configurationName });
+            return;
+        case 'getState':
+        {
+            const state = currentDatabase.state;
+            port.postMessage({ configurationName, state });
+            return;
+        }
+        case 'setCodeVerifier':
+            currentDatabase.codeVerifier = data.data.codeVerifier;
+            port.postMessage({ configurationName });
+            return;
+        case 'getCodeVerifier':
+        {
+            port.postMessage({ configurationName, codeVerifier: CODE_VERIFIER + '_' + configurationName });
+            return;
+        }
         case 'setSessionState':
             currentDatabase.sessionState = data.data.sessionState;
             port.postMessage({ configurationName });
