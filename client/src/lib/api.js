@@ -39,7 +39,7 @@ export const apiGetStuffListAsync = async () => {
 };
 
 export const apiGotoPageAsync = async (page) => {
-  const mock = isMock ? ".json" : "";
+  const mock = isMock ? `${page}.json` : "";
   const getMsg = {
     method: "get",
     headers: { Authorization: "Bearer " + get(tokens).accessToken },
