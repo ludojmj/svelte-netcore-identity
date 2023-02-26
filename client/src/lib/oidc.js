@@ -6,8 +6,7 @@ import { configuration } from "./const.js";
 const href = window.location.href;
 const vanillaOidc = VanillaOidc.getOrCreate(configuration);
 
-export let getToken = () => {
-  let result;
+export let getTokenAync = async () => {
   isAuthLoading.set(true);
   vanillaOidc.tryKeepExistingSessionAsync().then(() => {
     if (href.includes(configuration.redirect_uri)) {
@@ -19,24 +18,17 @@ export let getToken = () => {
       return;
     }
 
-    result = vanillaOidc.tokens;
-    tokens.set(result);
+    tokens.set(vanillaOidc.tokens);
     isAuthLoading.set(false);
   });
-
-  return result;
 };
 
-export let getUser = () => {
-  let result;
-  vanillaOidc.tryKeepExistingSessionAsync().then(() => {
-    vanillaOidc.userInfoAsync().then((resp) => {
-      result = resp;
+export let getUserAsync = async () => {
+  vanillaOidc.getValidTokenAsync().then(() => {
+    vanillaOidc.userInfoAsync().then((result) => {
       userInfo.set(result);
     });
   });
-
-  return result;
 };
 
 export const loginAsync = async () => {
@@ -46,4 +38,3 @@ export const loginAsync = async () => {
 export const logoutAsync = async () => {
   await vanillaOidc.logoutAsync();
 };
-

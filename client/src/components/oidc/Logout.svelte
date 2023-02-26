@@ -1,16 +1,16 @@
 <script>
   // Logout.svelte
-  import { tokens } from "../../lib/store.js";
+  import { userInfo } from "../../lib/store.js";
   import { logoutAsync } from "../../lib/oidc.js";
 </script>
 
-{#if $tokens}
+{#if $userInfo}
   <button class="btn btn-danger" on:click={async () => await logoutAsync()}>
     <span>
       Logout &nbsp;
 
       <span class="badge bg-primary">
-        {$tokens.accessTokenPayload.name}
+        {$userInfo.name}
       </span>
     </span>
   </button>

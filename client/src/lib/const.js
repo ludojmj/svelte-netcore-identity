@@ -7,7 +7,7 @@ export const configuration = {
   authority: "https://demo.duendesoftware.com",
   service_worker_relative_url: "/OidcServiceWorker.js",
   service_worker_only: false,
-  monitor_session: false
+  monitor_session: true
 };
 
 export const apiErrMsg = {

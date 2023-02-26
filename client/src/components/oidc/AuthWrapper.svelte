@@ -1,22 +1,24 @@
 <script>
   // AuthWrapper.svelte
-  import { isAuthLoading, isLoading, tokens } from "../../lib/store.js";
-  import { getToken } from "../../lib/oidc.js";
+  import { onMount } from "svelte";
+  import { isAuthLoading, userInfo } from "../../lib/store.js";
+  import { getTokenAync, getUserAsync } from "../../lib/oidc.js";
   import Loading from "../common/Loading.svelte";
   import Login from "./Login.svelte";
 
-  getToken();
+  onMount(async () => {
+    await getTokenAync();
+    await getUserAsync();
+  });
 </script>
 
 <main class="container">
   <Login />
   {#if $isAuthLoading}
     <Loading />
-  {:else if $tokens}
+  {:else if $userInfo}
     <slot />
-    {#if !$isLoading}
-      <pre>{JSON.stringify($tokens, null, "\t")}</pre>
-    {/if}
+    <pre>{JSON.stringify($userInfo, null, "\t")}</pre>
   {:else}
     <div class="alert alert-warning">
       You need to login to access this site.
