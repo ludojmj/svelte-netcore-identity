@@ -2,7 +2,7 @@
   // StuffList.svelte
   import { navigate } from "svelte-navigator";
   import { crud } from "../lib/const.js";
-  import { selectedItem, userInfo } from "../lib/store.js";
+  import { selectedItem, tokens } from "../lib/store.js";
   export let stuff;
 
   const handleRead = (stuffDatum) => {
@@ -36,7 +36,7 @@
     {#each stuff.datumList || [] as stuffDatum}
       <tr
         id={stuffDatum.id}
-        class={stuffDatum.user.id === $userInfo.sub
+        class={stuffDatum.user.id === $tokens.idTokenPayload.sub
           ? "table-success"
           : "table-danger"}
       >
@@ -68,7 +68,7 @@
             Read
           </button>
         </td>
-        {#if stuffDatum.user.id === $userInfo.sub}
+        {#if stuffDatum.user.id === $tokens.idTokenPayload.sub}
           <td>
             <button
               class="btn btn-warning"
