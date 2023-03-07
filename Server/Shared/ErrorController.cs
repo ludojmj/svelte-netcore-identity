@@ -7,7 +7,7 @@ namespace Server.Shared;
 [ApiExplorerSettings(IgnoreApi = true)]
 public class ErrorController : ControllerBase
 {
-    public IActionResult Error([FromServices] IHostEnvironment env)
+    public IActionResult Error([FromServices] IHostEnvironment env, [FromServices] ILogger<ErrorController> logger)
     {
         var context = HttpContext.Features.Get<IExceptionHandlerFeature>();
         if (context == null)
@@ -16,6 +16,7 @@ public class ErrorController : ControllerBase
         }
 
         var exception = context.Error;
+        logger.LogCritical(exception, "API_ERROR");
         var msg = exception.InnerException == null
             ? exception.Message
             : exception.InnerException.Message;

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Server.Shared;
 using Xunit;
@@ -15,6 +16,7 @@ public class TestErrorController
     {
         // Arrange
         var mockEnv = Mock.Of<IHostEnvironment>();
+        var mockLogger = Mock.Of<ILogger<ErrorController>>();
         var mockException = Mock.Of<IExceptionHandlerFeature>(x => x.Error == new KeyNotFoundException("Not found"));
 
         var context = new DefaultHttpContext();
@@ -26,7 +28,7 @@ public class TestErrorController
         };
 
         // Act
-        IActionResult actionResult = controller.Error(mockEnv);
+        IActionResult actionResult = controller.Error(mockEnv, mockLogger);
 
         // Assert
         var notFoundResult = Assert.IsType<NotFoundObjectResult>(actionResult);
@@ -40,6 +42,7 @@ public class TestErrorController
     {
         // Arrange
         var mockEnv = Mock.Of<IHostEnvironment>(x => x.EnvironmentName == "Development");
+        var mockLogger = Mock.Of<ILogger<ErrorController>>();
         var mockException = Mock.Of<IExceptionHandlerFeature>(x => x.Error == new ArgumentException("Should be displayed"));
 
         var context = new DefaultHttpContext();
@@ -51,7 +54,7 @@ public class TestErrorController
         };
 
         // Act
-        IActionResult actionResult = controller.Error(mockEnv);
+        IActionResult actionResult = controller.Error(mockEnv, mockLogger);
 
         // Assert
         var notFoundResult = Assert.IsType<BadRequestObjectResult>(actionResult);
@@ -65,6 +68,7 @@ public class TestErrorController
     {
         // Arrange
         var mockEnv = Mock.Of<IHostEnvironment>(x => x.EnvironmentName == "Production");
+        var mockLogger = Mock.Of<ILogger<ErrorController>>();
         var mockException = Mock.Of<IExceptionHandlerFeature>(x => x.Error == new ArgumentException("Should not be displayed"));
 
         var context = new DefaultHttpContext();
@@ -76,7 +80,7 @@ public class TestErrorController
         };
 
         // Act
-        IActionResult actionResult = controller.Error(mockEnv);
+        IActionResult actionResult = controller.Error(mockEnv, mockLogger);
 
         // Assert
         var notFoundResult = Assert.IsType<BadRequestObjectResult>(actionResult);

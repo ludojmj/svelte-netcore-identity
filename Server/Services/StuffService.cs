@@ -72,9 +72,8 @@ public class StuffService : IStuffService
         UserModel userAuth = _httpContext.HttpContext.GetCurrentUser();
         TUser dbUser = await _dbContext.TUsers.FirstOrDefaultAsync(x => x.UsrId == userAuth.Id);
         if (dbUser == null)
-        { // Create and attach new user
-            dbUser.UsrCreatedAt = DateTime.UtcNow.ToStrDate();
-            dbStuff.StfUser = dbUser;
+        {
+            throw new KeyNotFoundException("User not found.");
         }
 
         // Attach foreign key
@@ -95,7 +94,6 @@ public class StuffService : IStuffService
             .Where(x => x.StfId == stuffId)
             .Include(x => x.StfUser)
             .FirstOrDefaultAsync();
-
         if (dbStuff == null)
         {
             throw new KeyNotFoundException("Stuff not found.");

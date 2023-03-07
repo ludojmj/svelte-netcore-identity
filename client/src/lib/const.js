@@ -5,9 +5,9 @@ export const configuration = {
   silent_redirect_uri: window.location.origin + "/authentication/silent-callback",
   scope: "openid profile email api offline_access",
   authority: "https://demo.duendesoftware.com",
-  service_worker_relative_url: "/OidcServiceWorker.js",
+  // service_worker_relative_url: "/OidcServiceWorker.js",
   service_worker_only: false,
-  monitor_session: true
+  monitor_session: false
 };
 
 export const apiErrMsg = {

@@ -51,16 +51,15 @@ public class TestStuffService
         StfCreatedAt = DateTime.UtcNow.ToString("o")
     };
 
-    private readonly SqliteConnection _connection;
     private readonly StuffDbContext _dbContext;
     private readonly IStuffService _stuffService;
 
     public TestStuffService()
     {
-        _connection = new SqliteConnection("DataSource=:memory:");
-        _connection.Open();
+        var connection = new SqliteConnection("DataSource=:memory:");
+        connection.Open();
         var options = new DbContextOptionsBuilder<StuffDbContext>()
-            .UseSqlite(_connection)
+            .UseSqlite(connection)
             .Options;
         _dbContext = new StuffDbContext(options);
         _dbContext.Database.EnsureCreated();
@@ -69,13 +68,6 @@ public class TestStuffService
              && x.HttpContext.Request.Path == "/path"
              && x.HttpContext.Request.RouteValues == new RouteValueDictionary("GetList"));
         _stuffService = new StuffService(_dbContext, mockHttpCtx);
-    }
-
-    [Fact]
-    public void Dispose()
-    {
-        _dbContext.Dispose();
-        _connection.Close();
     }
 
     // ***** ***** ***** LIST
@@ -164,38 +156,38 @@ public class TestStuffService
     [Fact]
     public async Task StuffService_CreateAsync_ShouldReturn_Ok()
     {
-        // Arrange1
+        // Arrange
         // Existing user
         _dbContext.Add(_dbUser);
         await _dbContext.SaveChangesAsync();
 
-        // Act1
+        // Act
         var serviceResult = await _stuffService.CreateAsync(DatumModelTest);
 
-        // Assert1
+        // Assert
         int actual = serviceResult.Id.Count(x => x == '-');
         int expected = 4;
         Assert.Equal(expected, actual);
-
-        // ***
-        // Arrange2
-        // Creating user at the same time as stuff
-        DatumModelTest.User = null;
-
-        // Act2
-        serviceResult = await _stuffService.CreateAsync(DatumModelTest);
-
-        // Assert2
-        actual = serviceResult.Id.Count(x => x == '-');
-        expected = 4;
-        Assert.Equal(expected, actual);
-
-        // Restore
-        DatumModelTest.User = TestUserModel;
     }
 
     [Fact]
-    public async Task StuffService_CreateAsync_ShouldReturn_ArgumentException()
+    public async Task StuffService_CreateAsync_Without_User_ShouldThrow_KeyNotFoundException()
+    {
+        // Arrange
+        // No user in DB
+
+        // Act
+        var serviceResult = _stuffService.CreateAsync(DatumModelTest);
+        var exception = await Record.ExceptionAsync(() => serviceResult);
+
+        // Assert
+        Assert.NotNull(exception);
+        Assert.IsType<KeyNotFoundException>(exception);
+        Assert.Equal("User not found.", exception.Message);
+    }
+
+    [Fact]
+    public async Task StuffService_CreateAsync_ShouldThrow_ArgumentException()
     {
         // Arrange
         DatumModelTest.Label = string.Empty;
