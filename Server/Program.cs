@@ -63,12 +63,11 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     options.SuppressModelStateInvalidFilter = true;
 });
 
-var now = DateTime.Now;
 builder.Services.AddHsts(configureOptions =>
 {
     configureOptions.Preload = true;
     configureOptions.IncludeSubDomains = true;
-    configureOptions.MaxAge = now.AddYears(1) - now;
+    configureOptions.MaxAge = TimeSpan.FromDays(365);
 });
 
 builder.Services.AddHttpsRedirection(options =>
