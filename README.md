@@ -36,7 +36,7 @@ npm run dev
 - Server based on API mechanisms of: <https://reqres.in/api/whatever>
 - Svelte template client borrowed from: <https://svelte.dev>
 - Identity service powered by: <https://demo.duendesoftware.com>
-- Identity client borrowed from: <https://github.com/AxaGuilDEv/react-oidc>
+- Identity client borrowed from: <https://github.com/AxaFrance/react-oidc>
 - CSS borrowed from: <https://getbootstrap.com>
 - SVG borrowed from: <https://creativecommons.org>
 

@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "@axa-fr/vanilla-oidc": "^6.15.5",
+    "@axa-fr/vanilla-oidc": "^6.16.0",
     "@sveltejs/vite-plugin-svelte": "^2.0.2",
     "axios": "^1.2.2",
     "bootstrap": "^5.2.3",

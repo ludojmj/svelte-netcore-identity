@@ -6,8 +6,8 @@ export const configuration = {
   scope: "openid profile email api offline_access",
   authority: "https://demo.duendesoftware.com",
   // service_worker_relative_url: "/OidcServiceWorker.js",
-  service_worker_only: false,
-  monitor_session: false
+  // service_worker_only: true,
+  // monitor_session: true
 };
 
 export const apiErrMsg = {
