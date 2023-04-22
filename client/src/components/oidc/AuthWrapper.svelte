@@ -2,13 +2,12 @@
   // AuthWrapper.svelte
   import { onMount } from "svelte";
   import { isAuthLoading, tokens } from "../../lib/store.js";
-  import { getTokenAync, getUserAsync } from "../../lib/oidc.js";
+  import { getTokenAync } from "../../lib/oidc.js";
   import Loading from "../common/Loading.svelte";
   import Login from "./Login.svelte";
 
   onMount(async () => {
     await getTokenAync();
-    await getUserAsync();
   });
 </script>
 

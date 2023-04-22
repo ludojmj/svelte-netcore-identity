@@ -2,7 +2,7 @@
   import "./variables.scss";
   import { Router, Route } from "svelte-navigator";
   import { crud } from "./lib/const.js";
-  import { userInfo } from "./lib/store.js";
+  import { tokens } from "./lib/store.js";
   import AuthWrapper from "./components/oidc/AuthWrapper.svelte";
   import CrudManager from "./components/CrudManager.svelte";
   import StuffCreate from "./components/StuffCreate.svelte";
@@ -33,5 +33,5 @@
       <Error msgErr="I got lost." hasReset={true} />
     </Route>
   </Router>
-  <pre>{JSON.stringify($userInfo, null, "\t")}</pre>
+  <pre>{JSON.stringify($tokens, null, "\t")}</pre>
 </AuthWrapper>
