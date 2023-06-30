@@ -4,7 +4,7 @@ import { isAuthLoading, tokens } from "./store.js";
 import { configuration } from "./const.js";
 
 const href = window.location.href;
-const vanillaOidc = VanillaOidc.getOrCreate(configuration);
+const vanillaOidc = VanillaOidc.getOrCreate(() => fetch)(configuration);
 
 export let getTokenAync = async () => {
   isAuthLoading.set(true);

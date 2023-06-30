@@ -7,8 +7,9 @@ export const configuration = {
   authority: "https://demo.duendesoftware.com",
   service_worker_relative_url: '/OidcServiceWorker.js',
   service_worker_only: false,
-  silent_login_timeout: 1000,
-  monitor_session: true,
+  // silent_login_timeout: 1000,
+  // monitor_session: true,
+  token_renew_mode: 'access_token_invalid'
 };
 
 export const apiErrMsg = {
