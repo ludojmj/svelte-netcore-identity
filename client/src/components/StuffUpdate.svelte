@@ -1,7 +1,7 @@
 <script>
   // StuffUpdate.svelte
   import { onMount } from "svelte";
-  import { navigate } from "svelte-navigator";
+  import { navigate } from "svelte-routing";
   import { crud } from "../lib/const.js";
   import { selectedItem } from "../lib/store.js";
   import { apiUpdateStuffAsync } from "../lib/api.js";

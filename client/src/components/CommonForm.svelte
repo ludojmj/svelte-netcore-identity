@@ -1,6 +1,6 @@
 <script>
   // CommonForm.svelte
-  import { Link, navigate } from "svelte-navigator";
+  import { Link, navigate } from "svelte-routing";
   import { crud } from "../lib/const.js";
   import Error from "./common/Error.svelte";
   import Loading from "./common/Loading.svelte";

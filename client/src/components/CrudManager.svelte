@@ -1,7 +1,7 @@
 <script>
   // CrudManager.svelte
   import { onMount } from "svelte";
-  import { Link } from "svelte-navigator";
+  import { Link } from "svelte-routing";
   import { crud } from "../lib/const.js";
   import { isLoading } from "../lib/store.js";
   import {

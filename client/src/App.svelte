@@ -1,6 +1,6 @@
 <script>
   import "./variables.scss";
-  import { Router, Route } from "svelte-navigator";
+  import { Router, Route } from "svelte-routing";
   import { crud } from "./lib/const.js";
   import { tokens } from "./lib/store.js";
   import AuthWrapper from "./components/oidc/AuthWrapper.svelte";
@@ -13,7 +13,7 @@
 </script>
 
 <AuthWrapper>
-  <Router primary={false}>
+  <Router>
     <Route path={`/${crud.CREATE}`}>
       <StuffCreate />
     </Route>

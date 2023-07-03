@@ -1,6 +1,6 @@
 <script>
   // StuffCreate.svelte
-  import { navigate } from "svelte-navigator";
+  import { navigate } from "svelte-routing";
   import { crud } from "../lib/const.js";
   import { apiCreateStuffAsync } from "../lib/api.js";
   import CommonForm from "./CommonForm.svelte";

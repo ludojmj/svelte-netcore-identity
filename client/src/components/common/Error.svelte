@@ -1,6 +1,6 @@
 <script>
   // Error.svelte
-  import { Link } from "svelte-navigator";
+  import { Link } from "svelte-routing";
   import { tokens } from "../../lib/store.js";
   import { apiErrMsg } from "../../lib/const.js";
   export let msgErr, hasReset;

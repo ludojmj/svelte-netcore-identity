@@ -1,6 +1,6 @@
 <script>
   // StuffList.svelte
-  import { navigate } from "svelte-navigator";
+  import { navigate } from "svelte-routing";
   import { crud } from "../lib/const.js";
   import { selectedItem, tokens } from "../lib/store.js";
   export let stuff;

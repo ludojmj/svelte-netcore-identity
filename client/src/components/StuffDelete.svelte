@@ -1,6 +1,6 @@
 <script>
   // StuffDelete.svelte
-  import { navigate } from "svelte-navigator";
+  import { navigate } from "svelte-routing";
   import { crud } from "../lib/const.js";
   import { selectedItem } from "../lib/store.js";
   import { apiDeleteStuffAsync } from "../lib/api.js";
