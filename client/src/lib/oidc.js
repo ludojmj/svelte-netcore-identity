@@ -1,5 +1,5 @@
 // oidc.js
-import { VanillaOidc } from "@axa-fr/vanilla-oidc";
+import { VanillaOidc } from "@axa-fr/oidc-client";
 import { isAuthLoading, tokens } from "./store.js";
 import { configuration } from "./const.js";
 
