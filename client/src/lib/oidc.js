@@ -1,10 +1,10 @@
 // oidc.js
-import { VanillaOidc } from "@axa-fr/oidc-client";
+import { OidcClient } from "@axa-fr/oidc-client";
 import { isAuthLoading, tokens } from "./store.js";
 import { configuration } from "./const.js";
 
 const href = window.location.href;
-const vanillaOidc = VanillaOidc.getOrCreate(() => fetch)(configuration);
+const vanillaOidc = OidcClient.getOrCreate(() => fetch)(configuration);
 
 export let getTokenAync = async () => {
   isAuthLoading.set(true);
