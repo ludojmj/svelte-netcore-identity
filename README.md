@@ -206,14 +206,44 @@ VITE_API_URL="https://www.example.com/api/stuff"
 **When?**
 
 - Running the .NET Core server (dotnet run);
-- Connecting to: <http://localhost:5000/swagger>;
-- Or connecting to its redirection: <https://localhost:5001/swagger>.
+- Connecting to: <https://localhost:5001/health>.
 
 **How to solve?**
 
-- ==> Click "Advanced settings" button;
+> Firefox
+
+- ==> Click `Advanced settings` button;
 - ==> Click on the link to continue to the assumed unsafe localhost site;
 - ==> Accept self-signed localhost certificate.
+
+> Chrome/Chromium - cf. [issue](https://github.com/ludojmj/svelte-netcore-identity/issues/6#issuecomment-1783854585)
+
+- ==> In the browser, click "Not secure" in front of the uri <https://localhost:5001/health>;
+- ==> Click "Certificate is not valid";
+- ==> Click "Details" tab;
+- ==> Export the certificate as (for instance) "myLocalhostCert.crt";
+- ==> Then run in a terminal (the first command line may be useless if you've already got the `certutil` command):
+
+```bash
+sudo apt install libnss3-tools
+```
+
+```bash
+certutil -d sql:$HOME/.pki/nssdb -A -t "P,," -n <nickname> -i <export_path>/myLocalhostCert.crt
+```
+
+- ==> Close and reopen the browser;
+- ==> You can see your registered certificate (_org-localhost_) in: `Settings` / `Privacy and security` / `Security` / `Manage device certificates` / `Server` tab.
+
+> Chrome/Chromium - alternative fix - cf. [issue](https://github.com/ludojmj/svelte-netcore-identity/issues/6#issuecomment-1783854585)
+
+If you don't want to register the certificate, you can run Chrome/Chromium with `--ignore-certificate-errors` command line option:
+
+```bash
+chromium --ignore-certificate-errors
+```
+
+N.B. Replace "`chromium`" run command by your (depending on your distribution) actual Chrome/Chromium launcher: `chromium-browser`, `chrome`, `chrome-browser` or `google-chrome`, ...
 
 ### _You do not have permission to view this directory or page._
 
