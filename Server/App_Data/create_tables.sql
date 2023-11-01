@@ -24,3 +24,7 @@ CREATE TABLE t_stuff
          ON DELETE CASCADE
          ON UPDATE NO ACTION
 );
+
+
+INSERT INTO "main"."t_user" ("usr_id", "usr_name", "usr_given_name", "usr_family_name", "usr_email") VALUES ('1', 'Alice Smith', 'Alice', 'Smith', 'AliceSmith@email.com');
+INSERT INTO "main"."t_user" ("usr_id", "usr_name", "usr_given_name", "usr_family_name", "usr_email") VALUES ('2', 'Bob Smith', 'Bob', 'Smith', 'BobSmith@email.com');

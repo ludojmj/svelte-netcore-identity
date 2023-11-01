@@ -1,8 +1,11 @@
 #!/bin/bash
 step=0
-STEPS=5
+STEPS=6
 
 clear
+let "step++"
+printf "\n************************** $step/$STEPS : Init database...\n"
+sqlite3 Server/App_Data/order.db < Server/App_Data/create_tables.sql
 
 let "step++"
 printf "\n************************** $step/$STEPS : Building client...\n"
