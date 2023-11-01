@@ -150,12 +150,12 @@ VITE_API_URL="https://www.example.com/api/stuff"
 
 ## Troubleshooting
 
-### _Unable to register/update a service worker for scope 'http://localhost:3000/': Storage access is restricted in this context due to user settings or incognito mode._
+### _Unable to register/update a service worker for scope 'http://localhost:5173/': Storage access is restricted in this context due to user settings or incognito mode._
 
 **When?**
 
 - When using Firefox;
-- Running http://localhost:3000 (actually using http instead of https);
+- Running http://localhost:5173 (actually using http instead of https);
 - The website is stucked, you must open the debug console to see this message.
 
 **Why?**
@@ -164,7 +164,7 @@ VITE_API_URL="https://www.example.com/api/stuff"
 
 **How to solve?**
 
-- Allow your website (http://localhost:3000) to use cookies and site data;
+- Allow your website (http://localhost:5173) to use cookies and site data;
 - Click to see how to proceed: https://support.mozilla.org/en-US/kb/block-websites-storing-cookies-site-data-firefox
 
 ### _An error occured. Please try again later._
