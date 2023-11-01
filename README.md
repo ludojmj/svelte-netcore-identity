@@ -1,4 +1,6 @@
-# All-In-One CRUD
+# DEPRECATED
+
+svelte-netcore-identity is no longer supported, please consider using svelte**kit**-netcore-identity instead.
 
 ```bash
 git clone https://github.com/ludojmj/svelte-netcore-identity.git
